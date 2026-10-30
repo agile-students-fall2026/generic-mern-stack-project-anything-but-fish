@@ -1,4 +1,9 @@
-The front-end of your project will live in this directory by the end of Sprint 1.
+Run from the front-end directory:
+  npm install
+  npm run dev
 
-If using a setup tool such as Vite or create-react-app to begin the front-end, you may want to delete this directory and then have create-react-app recreate it for you.
+Build:
+  npm run build
 
+Pages follow ux-design/app-map.png. They contain placeholder text and navigation buttons only.
+Account creation, login, password recovery, and Save / Load are placeholders; no data is sent or saved.
