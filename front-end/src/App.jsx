@@ -4,7 +4,7 @@ import Register from "./components/Register";
 import AccountCreated from "./components/AccountCreated";
 import Login from "./components/Login";
 import PasswordRecovery from "./components/PasswordRecovery";
-import VerificationCode from "./components/VerificationCode";
+import { AuthProvider, RequireAuth } from "./auth/AuthContext";
 import ResetPassword from "./components/ResetPassword";
 import ResetConfirmation from "./components/ResetConfirmation";
 import MainScreen from "./components/MainScreen";
@@ -26,15 +26,16 @@ import ObjectDescriptions from "./components/ObjectDescriptions";
 function App() {
   return (
     <BrowserRouter>
+      <AuthProvider>
       <Routes>
         <Route path="/" element={<Welcome />} />
         <Route path="/register" element={<Register />} />
         <Route path="/account-created" element={<AccountCreated />} />
         <Route path="/login" element={<Login />} />
         <Route path="/password-recovery" element={<PasswordRecovery />} />
-        <Route path="/verification-code" element={<VerificationCode />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/reset-confirmation" element={<ResetConfirmation />} />
+        <Route element={<RequireAuth />}>
         <Route path="/starting" element={<MainScreen />} />
         <Route path="/game" element={<Game />} />
         <Route path="/game/:page" element={<Game />} />
@@ -51,8 +52,10 @@ function App() {
         <Route path="/plots/chapters" element={<ChapterSelection />} />
         <Route path="/plots/chapters/text" element={<ChapterText />} />
         <Route path="/plots/objects" element={<ObjectDescriptions />} />
+        </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
