@@ -7,7 +7,7 @@ export default function ChooseCharacter() {
     <div>
       <p>Choose character</p>
       <button onClick={() => navigate("/character-chat")}>Chat with character</button>
-      <button onClick={() => navigate("/inventory")}>Inventory</button>
+      <button onClick={() => navigate("/inventory", { state: { from: "/choose-character" } })}>Inventory</button>
       <button onClick={() => navigate("/npc-chat")}>Back</button>
     </div>
   );

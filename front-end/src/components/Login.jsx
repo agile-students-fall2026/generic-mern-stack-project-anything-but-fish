@@ -22,14 +22,15 @@ export default function Login() {
     finally { setBusy(false); }
   }
   return <AuthLayout title="Log In">
-    {error && <p className="alert alert-danger" role="alert">{error}</p>}
+    {error && <p role="alert">{error}</p>}
     <form onSubmit={submit} aria-busy={busy}>
       <fieldset disabled={busy}>
-        <div className="mb-3"><label className="form-label" htmlFor="email">Email</label><input className="form-control" id="email" name="email" type="email" autoComplete="username" required maxLength={254} /></div>
-        <div className="mb-3"><label className="form-label" htmlFor="password">Password</label><input className="form-control" id="password" name="password" type="password" autoComplete="current-password" required /></div>
-        <button className="btn btn-primary w-100" type="submit">{busy ? "Logging in…" : "Log In"}</button>
+        <div><label htmlFor="email">Email</label>{" "}<input id="email" name="email" type="email" autoComplete="username" required maxLength={254} /></div>
+        <div><label htmlFor="password">Password</label>{" "}<input id="password" name="password" type="password" autoComplete="current-password" required /></div>
+        <button type="submit">{busy ? "Logging in…" : "Log In"}</button>
       </fieldset>
     </form>
-    <div className="d-flex justify-content-between mt-3"><Link to="/password-recovery">Forgot password?</Link><Link to="/register">Sign Up</Link></div>
+    <p><Link to="/password-recovery">Forgot password?</Link></p>
+    <p><Link to="/register">Sign Up</Link></p>
   </AuthLayout>;
 }
