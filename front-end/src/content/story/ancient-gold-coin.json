@@ -1,0 +1,308 @@
+{
+  "id": "ancient-gold-coin",
+  "title": "An Ancient Gold Coin",
+  "characters": {
+    "a": {
+      "name": "A",
+      "portrait": null
+    },
+    "b": {
+      "name": "B",
+      "portrait": null
+    },
+    "miner": {
+      "name": "Miner",
+      "portrait": null
+    },
+    "merchant": {
+      "name": "Merchant",
+      "portrait": null
+    },
+    "miner-1": {
+      "name": "Miner 1",
+      "portrait": null
+    },
+    "miner-2": {
+      "name": "Miner 2",
+      "portrait": null
+    },
+    "child": {
+      "name": "Child",
+      "portrait": null
+    }
+  },
+  "pages": [
+    {
+      "id": "pond",
+      "template": "archive",
+      "blocks": [
+        {
+          "type": "image",
+          "src": null,
+          "description": "A view of the fishing pond."
+        },
+        {
+          "type": "text",
+          "text": "Ah, the \"thrill\" of being on the clock."
+        },
+        {
+          "type": "image",
+          "src": null,
+          "description": "Close-up of A holding the gold coin."
+        },
+        {
+          "type": "image",
+          "src": null,
+          "description": "The pond glows. Light surrounds A and B."
+        }
+      ]
+    },
+    {
+      "id": "pond-b-nervous",
+      "template": "dialogue",
+      "background": {
+        "src": null,
+        "description": "A view of the fishing pond.\nClose-up of A holding the gold coin.\nThe pond glows. Light surrounds A and B."
+      },
+      "speaker": "b",
+      "content": [
+        "Oh no... My first real investigation. I'm so nervous."
+      ]
+    },
+    {
+      "id": "pond-a-reassures",
+      "template": "dialogue",
+      "background": {
+        "src": null,
+        "description": "A view of the fishing pond.\nClose-up of A holding the gold coin.\nThe pond glows. Light surrounds A and B."
+      },
+      "speaker": "a",
+      "content": [
+        "It's okay, sweetie. Everyone gets nervous the first time. Our safety comes first. If anything feels wrong, we'll come straight back."
+      ]
+    },
+    {
+      "id": "pond-b-relieved",
+      "template": "dialogue",
+      "background": {
+        "src": null,
+        "description": "A view of the fishing pond.\nClose-up of A holding the gold coin.\nThe pond glows. Light surrounds A and B."
+      },
+      "speaker": "b",
+      "content": [
+        "Okay... I feel better knowing you're here!"
+      ]
+    },
+    {
+      "id": "old-town",
+      "template": "archive",
+      "blocks": [
+        {
+          "type": "image",
+          "src": null,
+          "description": "Wide view: The town sits in a low basin between the mountains. The mine is on the hillside above it."
+        },
+        {
+          "type": "text",
+          "text": "The same motions, over and over. About as thrilling as the little town itself."
+        },
+        {
+          "type": "image",
+          "src": null,
+          "description": "Miners at work."
+        }
+      ]
+    },
+    {
+      "id": "cursed-ore",
+      "template": "dialogue",
+      "background": {
+        "src": null,
+        "description": "A miner finds the cursed ore. The others gather around and cheer."
+      },
+      "speaker": "miner",
+      "content": [
+        "What's this?"
+      ]
+    },
+    {
+      "id": "ore-market",
+      "template": "dialogue",
+      "background": {
+        "src": null,
+        "description": "An ore merchant examines the ore and finds that it is worth a fortune.\nThe miner looks surprised and delighted."
+      },
+      "speaker": "merchant",
+      "content": [
+        "My God... I've never seen ore this beautiful! I'd give everything I own for it."
+      ]
+    },
+    {
+      "id": "deeper-digging",
+      "template": "archive",
+      "blocks": [
+        {
+          "type": "image",
+          "src": null,
+          "description": "The townspeople mine day and night, hoping to sell more ore for more money."
+        },
+        {
+          "type": "text",
+          "text": "More digging, more money. Rest, sadly, doesn't pay."
+        },
+        {
+          "type": "image",
+          "src": null,
+          "description": "They follow the ore deeper into the mountain. Water starts to seep through the rock, but they keep digging."
+        }
+      ]
+    },
+    {
+      "id": "mine-flood",
+      "template": "dialogue",
+      "background": {
+        "src": null,
+        "description": "A pickaxe breaks through the last layer of rock, opening a path to an underground river higher inside the mountain.\nThe crack widens. Water bursts into the tunnel. The miners drop their tools and run."
+      },
+      "speaker": "miner-1",
+      "content": [
+        "Wait. Why is so much water leaking through?"
+      ]
+    },
+    {
+      "id": "mine-flood-keep-digging",
+      "template": "dialogue",
+      "background": {
+        "src": null,
+        "description": "A pickaxe breaks through the last layer of rock, opening a path to an underground river higher inside the mountain.\nThe crack widens. Water bursts into the tunnel. The miners drop their tools and run."
+      },
+      "speaker": "miner-2",
+      "content": [
+        "Just a little more. There's got to be more ore behind—"
+      ]
+    },
+    {
+      "id": "mine-flood-run",
+      "template": "dialogue",
+      "background": {
+        "src": null,
+        "description": "A pickaxe breaks through the last layer of rock, opening a path to an underground river higher inside the mountain.\nThe crack widens. Water bursts into the tunnel. The miners drop their tools and run."
+      },
+      "speaker": "miner-1",
+      "content": [
+        "Run!"
+      ]
+    },
+    {
+      "id": "flooded-town",
+      "template": "dialogue",
+      "background": {
+        "src": null,
+        "description": "Water rushes through the tunnels, out of the hillside mine entrance, and down toward the town.\nThe basin's narrow outlet cannot drain the water fast enough. The water rises until the whole town is flooded.\nPeople flee. Some do not escape the flood."
+      },
+      "speaker": "child",
+      "content": [
+        "Mom? Where are you?"
+      ]
+    },
+    {
+      "id": "town-gate",
+      "template": "dialogue",
+      "background": {
+        "src": null,
+        "description": "By the present day, the floodwater is long gone. High water marks stain the town walls. Mud and broken buildings fill the streets.\nA and B look around in shock. They move forward, exploring the town.\nA grips the coin tightly."
+      },
+      "speaker": "b",
+      "content": [
+        "The water got that high...? Did the people here get out?"
+      ]
+    },
+    {
+      "id": "town-gate-a-leads",
+      "template": "dialogue",
+      "background": {
+        "src": null,
+        "description": "By the present day, the floodwater is long gone. High water marks stain the town walls. Mud and broken buildings fill the streets.\nA and B look around in shock. They move forward, exploring the town.\nA grips the coin tightly."
+      },
+      "speaker": "a",
+      "content": [
+        "We don't know yet. Feeling ready to take a look inside? I'll go first."
+      ]
+    },
+    {
+      "id": "town-gate-b-follows",
+      "template": "dialogue",
+      "background": {
+        "src": null,
+        "description": "By the present day, the floodwater is long gone. High water marks stain the town walls. Mud and broken buildings fill the streets.\nA and B look around in shock. They move forward, exploring the town.\nA grips the coin tightly."
+      },
+      "speaker": "b",
+      "content": [
+        "Okay. I'm right behind you!"
+      ]
+    },
+    {
+      "id": "bridge-betrayal",
+      "template": "dialogue",
+      "background": {
+        "src": null,
+        "description": "A picks up a broken sword from the ground and stabs B.\nB falls to the ground, dead.\nA walks toward the pile of gold coins."
+      },
+      "speaker": "a",
+      "content": [
+        "They're mine!"
+      ]
+    },
+    {
+      "id": "bridge-betrayal-b",
+      "template": "dialogue",
+      "background": {
+        "src": null,
+        "description": "A picks up a broken sword from the ground and stabs B.\nB falls to the ground, dead.\nA walks toward the pile of gold coins."
+      },
+      "speaker": "b",
+      "content": [
+        "A...?"
+      ]
+    },
+    {
+      "id": "bridge-fall",
+      "template": "archive",
+      "blocks": [
+        {
+          "type": "image",
+          "src": null,
+          "description": "A trips over ore scattered on the bridge and falls."
+        }
+      ]
+    },
+    {
+      "id": "sealed-file",
+      "template": "archive",
+      "blocks": [
+        {
+          "type": "image",
+          "src": null,
+          "description": "A new file stamped \"FAILED\" lies on the desk."
+        },
+        {
+          "type": "text",
+          "text": "Item under investigation: Cursed gold coin."
+        },
+        {
+          "type": "image",
+          "src": null,
+          "description": "Close-up of the file's contents."
+        },
+        {
+          "type": "text",
+          "text": "Description: Contact with the coin creates an intense desire for it. Those affected will do whatever it takes to get more."
+        },
+        {
+          "type": "text",
+          "text": "Investigation outcome: Failed. File sealed."
+        }
+      ]
+    }
+  ]
+}

@@ -44,7 +44,7 @@ export const useAuth = () => useContext(AuthContext);
 export function RequireAuth() {
   const { user, loading, error, retry } = useAuth();
   const location = useLocation();
-  if (loading) return <main className="container py-5" role="status">Checking your session…</main>;
-  if (error) return <main className="container py-5"><p role="alert" className="alert alert-danger">{error}</p><button className="btn btn-primary" onClick={retry}>Retry</button></main>;
+  if (loading) return <main role="status">Checking your session…</main>;
+  if (error) return <main><p role="alert">{error}</p><button onClick={retry}>Retry</button></main>;
   return user ? <Outlet /> : <Navigate to="/login" state={{ from: location.pathname + location.search }} replace />;
 }

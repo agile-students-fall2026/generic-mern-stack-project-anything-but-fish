@@ -19,14 +19,14 @@ export default function PasswordRecovery() {
     finally { setBusy(false); }
   }
   return <AuthLayout title="Password Recovery">
-    {error && <p className="alert alert-danger" role="alert">{error}</p>}
-    {sent ? <p className="alert alert-success" role="status">If an account exists for that email, you will receive a password reset link.</p> : <>
+    {error && <p role="alert">{error}</p>}
+    {sent ? <p role="status">If an account exists for that email, you will receive a password reset link.</p> : <>
       <p>Enter your email to receive a password reset link.</p>
       <form onSubmit={submit} aria-busy={busy}><fieldset disabled={busy}>
-        <div className="mb-3"><label className="form-label" htmlFor="email">Email</label><input className="form-control" id="email" name="email" type="email" autoComplete="email" maxLength={254} required /></div>
-        <button className="btn btn-primary w-100" type="submit">{busy ? "Sending…" : "Send Reset Link"}</button>
+        <div><label htmlFor="email">Email</label>{" "}<input id="email" name="email" type="email" autoComplete="email" maxLength={254} required /></div>
+        <button type="submit">{busy ? "Sending…" : "Send Reset Link"}</button>
       </fieldset></form>
     </>}
-    <Link className="d-inline-block mt-3" to="/login">Back to Log In</Link>
+    <Link to="/login">Back to Log In</Link>
   </AuthLayout>;
 }

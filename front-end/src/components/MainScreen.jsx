@@ -18,9 +18,9 @@ export default function MainScreen() {
   return (
     <div>
       <p>Main Screen</p>
-      <p>Signed in as {user.email}</p>
-      {error && <p className="alert alert-danger" role="alert">{error}</p>}
-      <button className="btn btn-outline-secondary" disabled={busy} onClick={handleLogout}>{busy ? "Logging out…" : "Log Out"}</button>
+      {user && <p>Signed in as {user.email}</p>}
+      {error && <p role="alert">{error}</p>}
+      {user && <button disabled={busy} onClick={handleLogout}>{busy ? "Logging out…" : "Log Out"}</button>}
       <button onClick={() => navigate("/game")}>Start Game</button>
       <button onClick={() => navigate("/npc-chat")}>Chat with NPC</button>
       <button onClick={() => navigate("/collections")}>Collections</button>

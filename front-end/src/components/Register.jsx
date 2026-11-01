@@ -20,13 +20,13 @@ export default function Register() {
     finally { setBusy(false); }
   }
   return <AuthLayout title="Sign Up">
-    {error && <p className="alert alert-danger" role="alert">{error}</p>}
+    {error && <p role="alert">{error}</p>}
     <form onSubmit={submit} aria-busy={busy}><fieldset disabled={busy}>
-      <div className="mb-3"><label className="form-label" htmlFor="email">Email</label><input className="form-control" id="email" name="email" type="email" autoComplete="email" required maxLength={254} /></div>
-      <div className="mb-3"><label className="form-label" htmlFor="password">Password</label><input className="form-control" id="password" name="password" type="password" autoComplete="new-password" minLength={8} maxLength={128} aria-describedby="password-help" required /><div className="form-text" id="password-help">Use 8–128 characters.</div></div>
-      <div className="mb-3"><label className="form-label" htmlFor="confirmation">Confirm password</label><input className="form-control" id="confirmation" name="confirmation" type="password" autoComplete="new-password" minLength={8} maxLength={128} required /></div>
-      <button className="btn btn-primary w-100" type="submit">{busy ? "Creating account…" : "Create Account"}</button>
+      <div><label htmlFor="email">Email</label>{" "}<input id="email" name="email" type="email" autoComplete="email" required maxLength={254} /></div>
+      <div><label htmlFor="password">Password</label>{" "}<input id="password" name="password" type="password" autoComplete="new-password" minLength={8} maxLength={128} aria-describedby="password-help" required /><div id="password-help">Use 8–128 characters.</div></div>
+      <div><label htmlFor="confirmation">Confirm password</label>{" "}<input id="confirmation" name="confirmation" type="password" autoComplete="new-password" minLength={8} maxLength={128} required /></div>
+      <button type="submit">{busy ? "Creating account…" : "Create Account"}</button>
     </fieldset></form>
-    <p className="mt-3 mb-0">Already have an account? <Link to="/login">Log In</Link></p>
+    <p>Already have an account? <Link to="/login">Log In</Link></p>
   </AuthLayout>;
 }

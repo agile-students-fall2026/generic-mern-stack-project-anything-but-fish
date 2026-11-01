@@ -22,14 +22,14 @@ export default function ResetPassword() {
     finally { setBusy(false); }
   }
   return <AuthLayout title="Reset Password">
-    {!token ? <p className="alert alert-warning" role="alert">This reset link is missing a token. Please request a new link.</p> : <>
-      {error && <p className="alert alert-danger" role="alert">{error}</p>}
+    {!token ? <p role="alert">This reset link is missing a token. Please request a new link.</p> : <>
+      {error && <p role="alert">{error}</p>}
       <form onSubmit={submit} aria-busy={busy}><fieldset disabled={busy}>
-        <div className="mb-3"><label className="form-label" htmlFor="password">New password</label><input className="form-control" id="password" name="password" type="password" autoComplete="new-password" minLength={8} maxLength={128} aria-describedby="password-help" required /><div className="form-text" id="password-help">Use 8–128 characters.</div></div>
-        <div className="mb-3"><label className="form-label" htmlFor="confirmation">Confirm new password</label><input className="form-control" id="confirmation" name="confirmation" type="password" autoComplete="new-password" minLength={8} maxLength={128} required /></div>
-        <button className="btn btn-primary w-100" type="submit">{busy ? "Resetting…" : "Reset Password"}</button>
+        <div><label htmlFor="password">New password</label>{" "}<input id="password" name="password" type="password" autoComplete="new-password" minLength={8} maxLength={128} aria-describedby="password-help" required /><div id="password-help">Use 8–128 characters.</div></div>
+        <div><label htmlFor="confirmation">Confirm new password</label>{" "}<input id="confirmation" name="confirmation" type="password" autoComplete="new-password" minLength={8} maxLength={128} required /></div>
+        <button type="submit">{busy ? "Resetting…" : "Reset Password"}</button>
       </fieldset></form>
     </>}
-    <Link className="d-inline-block mt-3" to="/password-recovery">Request a new reset link</Link>
+    <Link to="/password-recovery">Request a new reset link</Link>
   </AuthLayout>;
 }

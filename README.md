@@ -19,10 +19,19 @@ Anything but Fish began as a [course proposal](https://github.com/liangchuxin/ag
 
 - [UX Design](UX-DESIGN.md): app map, wireframes, and prototype link
 - [Contributing](CONTRIBUTING.md): team norms and development workflow
+- [Story content](front-end/src/content/story/README.md): JSON structure, page templates, and image/text blocks
 
 ## Setup and Testing
 
-Setup and testing instructions will be added when the initial application is ready.
+Run `npm install` and `npm run dev` from `front-end`. Local configuration is in
+`front-end/.env` and `back-end/.env` (ignored by Git); copy the corresponding
+`.env.example` files on a new checkout. Run `npm run build` to verify the frontend.
+
+The authentication frontend uses native HTML form controls and calls a cookie-based API.
+MongoDB configuration is backend-only. The backend and email delivery still need
+to be implemented; see [frontend setup](front-end/readme.txt) and
+[backend API contract](back-end/readme.txt). Password recovery uses reset links
+without a verification-code step.
 
 
 ## Sprint 1 Plans
