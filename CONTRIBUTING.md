@@ -11,7 +11,7 @@ The Scrum Master posts one summary of each standup in the team channel, includin
 ## Sprint 0 Roles
 
 - **Product Owner:** [Celia Liang](https://github.com/liangchuxin)
-- **Scrum Master:** [Jonas Chen](https://github.com/JonasChenJusFox)
+- **Scrum Master:** [Jonas Chen](https://github.com/JonasChenJusFo
 
 Roles rotate each sprint. Everyone contributes to design and development.
 
@@ -24,6 +24,13 @@ Roles rotate each sprint. Everyone contributes to design and development.
 5. Another teammate reviews and merges the PR using **Create a merge commit**. Do not push directly to `master` or merge your own PR. Check the work and run relevant tests before merging, then mark the completed task **Done**.
 
 Keep Issue assignments and board statuses current.
+
+## Sprint 0 Roles
+
+- Product Owner: Anthony
+- Scrum Master: [Nigina Rashidova](https://github.com/monbbdzy)
+
+
 
 ## Local Setup
 
