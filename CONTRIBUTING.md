@@ -11,7 +11,7 @@ The Scrum Master posts one summary of each standup in the team channel, includin
 ## Sprint 0 Roles
 
 - **Product Owner:** [Celia Liang](https://github.com/liangchuxin)
-- **Scrum Master:** [Jonas Chen](https://github.com/JonasChenJusFo
+- **Scrum Master:** [Jonas Chen](https://github.com/JonasChenJusFox)
 
 Roles rotate each sprint. Everyone contributes to design and development.
 
@@ -25,11 +25,20 @@ Roles rotate each sprint. Everyone contributes to design and development.
 
 Keep Issue assignments and board statuses current.
 
-## Sprint 0 Roles
+## Sprint 1 Roles
 
-- Product Owner: Anthony
+- Product Owner: [Anthony Wang](https://github.com/aw4580)
 - Scrum Master: [Nigina Rashidova](https://github.com/monbbdzy)
 
+
+## Division Plan for Sprint 1
+
+| Team Member | Responsibilities | Status |
+|-------------|------------------|--------|
+| [Nigina Rashidova](https://github.com/monbbdzy) | TBD | Not Started |
+| [Anthony Wang](https://github.com/aw4580) | TBD | Not Started |
+| [Celia Liang](https://github.com/liangchuxin) | Game Setting | Not Started |
+| [Jonas Chen](https://github.com/JonasChenJusFox) | Auth and Main Screen | Completed |
 
 
 ## Local Setup
