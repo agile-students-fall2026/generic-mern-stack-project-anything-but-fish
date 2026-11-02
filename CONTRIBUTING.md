@@ -35,7 +35,7 @@ Keep Issue assignments and board statuses current.
 
 | Team Member | Responsibilities | Status |
 |-------------|------------------|--------|
-| [Nigina Rashidova](https://github.com/monbbdzy) | TBD | Not Started |
+| [Nigina Rashidova](https://github.com/monbbdzy) | NPC Chat bot page and Collections page | In the proccess |
 | [Anthony Wang](https://github.com/aw4580) | TBD | Not Started |
 | [Celia Liang](https://github.com/liangchuxin) | Game Setting | Not Started |
 | [Jonas Chen](https://github.com/JonasChenJusFox) | Auth and Main Screen | Completed |
