@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 export default function Inventory() {
   const navigate = useNavigate();
   const location = useLocation();
-  const returnTo = location.state?.from || "/choose-character";
+  const returnTo = location.state?.from || "/chat";
 
   return (
     <div>

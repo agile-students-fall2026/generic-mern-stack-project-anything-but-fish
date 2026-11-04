@@ -1,7 +1,29 @@
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { authRequest } from "../lib/auth-api";
-import AuthLayout from "./AuthLayout";
+import AuthPage from "./AuthPage";
+
+const fields = [
+  {
+    name: "password",
+    label: "New password",
+    type: "password",
+    autoComplete: "new-password",
+    minLength: 8,
+    maxLength: 128,
+    required: true,
+    help: "Use 8–128 characters.",
+  },
+  {
+    name: "confirmation",
+    label: "Confirm new password",
+    type: "password",
+    autoComplete: "new-password",
+    minLength: 8,
+    maxLength: 128,
+    required: true,
+  },
+];
 
 export default function ResetPassword() {
   const [params] = useSearchParams();
@@ -21,15 +43,24 @@ export default function ResetPassword() {
     } catch (error) { setError(error.message); }
     finally { setBusy(false); }
   }
-  return <AuthLayout title="Reset Password">
-    {!token ? <p role="alert">This reset link is missing a token. Please request a new link.</p> : <>
-      {error && <p role="alert">{error}</p>}
-      <form onSubmit={submit} aria-busy={busy}><fieldset disabled={busy}>
-        <div><label htmlFor="password">New password</label>{" "}<input id="password" name="password" type="password" autoComplete="new-password" minLength={8} maxLength={128} aria-describedby="password-help" required /><div id="password-help">Use 8–128 characters.</div></div>
-        <div><label htmlFor="confirmation">Confirm new password</label>{" "}<input id="confirmation" name="confirmation" type="password" autoComplete="new-password" minLength={8} maxLength={128} required /></div>
-        <button type="submit">{busy ? "Resetting…" : "Reset Password"}</button>
-      </fieldset></form>
-    </>}
-    <Link to="/password-recovery">Request a new reset link</Link>
-  </AuthLayout>;
+  return (
+    <AuthPage
+      variant="reset"
+      title="Reset Password"
+      fields={fields}
+      onSubmit={submit}
+      busy={busy}
+      error={!token ? "This reset link is missing a token. Please request a new link." : error}
+      hideControls={!token}
+      buttonLabel="Reset Password"
+      busyLabel="Resetting…"
+      footer={(
+        <>
+          <Link to="/password-recovery">Request a new reset link</Link>
+          <Link to="/login">Login</Link>
+          <Link to="/">Home</Link>
+        </>
+      )}
+    />
+  );
 }

@@ -9,7 +9,9 @@ The file has four top-level fields:
 - `characters`: a map of character keys to `{ "name": "B", "portrait": null }` objects.
 - `pages`: the ordered list of story pages.
 
-Each page has a unique, stable `id`. Previous and Next follow the array order, while URLs use the ID, such as `/game/pond-b-nervous`. Insert or rearrange pages in the array without renaming existing IDs. There is no `goto` field in this version.
+Each page has a unique, stable `id`. The current Game filters this list to pages with a `speaker` and non-empty `content`, then numbers those dialogues from 1: `/game/1`, `/game/2`, and so on. `/game` and invalid page numbers redirect to `/game/1`. Previous, Next, refresh, and browser history follow that number. Rearranging or inserting dialogues changes their numbered URLs; keep the underlying IDs stable. There is no `goto` field in this version.
+
+The original reader is retained in [GameOld.jsx](../../components/GameOld.jsx) and `GameOld.css`. Its import and `/game-old` routes are commented out in App.jsx. Uncomment them to see all pages, including archive pages, with the original ID-based URLs such as `/game-old/pond-b-nervous`.
 
 ## Dialogue pages
 
@@ -32,7 +34,7 @@ This is a page object inside `pages`:
 }
 ```
 
-Omit `speaker` when using this layout for unnamed narration. The character's `portrait` is the small image above the dialogue box. It is separate from the background. Set a character's name and portrait once in `characters`; pages referencing that key use those values. [DialoguePage.jsx](../../components/story/DialoguePage.jsx) renders this template.
+Omit `speaker` when using this layout for unnamed narration; the current Game skips those pages. It displays only the dialogue itself, without speaker names or scene descriptions. In the original reader, the character's `portrait` is the small image above the dialogue box. Set a character's name and portrait once in `characters`; [DialoguePage.jsx](../../components/story/DialoguePage.jsx) renders this legacy template.
 
 ## Archive pages
 
@@ -61,9 +63,11 @@ An archive page uses `blocks` instead of `speaker` and `content`. Blocks render 
 }
 ```
 
-[ArchivePage.jsx](../../components/story/ArchivePage.jsx) renders these blocks. A page can contain only images, as `bridge-fall` currently does.
+[ArchivePage.jsx](../../components/story/ArchivePage.jsx) renders these blocks in GameOld. The current Game skips archive pages. A page can contain only images, as `bridge-fall` currently does.
 
 ## Artwork and current limits
+
+The current illustrated Game uses the local layers and four temporary random scene images in `src/assets/game`. The following JSON artwork paths are used by GameOld.
 
 Put artwork under `front-end/public`. For example, a file at `front-end/public/story/ancient-gold-coin/pond.png` uses `"src": "/story/ancient-gold-coin/pond.png"`. A portrait at `front-end/public/characters/b.png` uses `"portrait": "/characters/b.png"`.
 

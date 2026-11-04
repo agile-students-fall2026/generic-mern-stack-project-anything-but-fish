@@ -1,72 +1,170 @@
-import { useEffect } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import chapter from "../content/story/ancient-gold-coin.json";
-import DialoguePage from "./story/DialoguePage";
-import ArchivePage from "./story/ArchivePage";
+import deskBackground from "../assets/game/desk-background.png";
+import folderBackground from "../assets/game/folder-background.png";
+import clipboardClip from "../assets/game/clipboard-clip.png";
+import documentBackground from "../assets/game/document-background.png";
+import map from "../assets/game/map.png";
+import note from "../assets/game/note.png";
+import pen from "../assets/game/pen.png";
+import badge from "../assets/game/badge.png";
+import portrait from "../assets/game/portrait.png";
+import radio from "../assets/game/radio.png";
+import fishingHook from "../assets/game/fishing-hook.png";
+import paperclip from "../assets/game/paperclip.png";
+import homeIcon from "../assets/game/home-icon.png";
+import inventoryIcon from "../assets/game/inventory-icon.png";
+import settingsIcon from "../assets/game/settings-icon.png";
+import callFromDeep from "../assets/game/scenes/call-from-deep.png";
+import sceneThree from "../assets/game/scenes/img3.png";
+import sceneOne from "../assets/game/scenes/img1.png";
+import legacy from "../assets/game/scenes/legacy.png";
 import "./Game.css";
 
+// Back to front, matching the supplied layer stack. Every PNG retains its canvas.
+const backgroundLayers = [
+  deskBackground,
+  folderBackground,
+  clipboardClip,
+  documentBackground,
+];
+
+const foregroundLayers = [
+  map,
+  note,
+  pen,
+  badge,
+  portrait,
+  radio,
+];
+
+const dialoguePages = chapter.pages.filter((page) => page.speaker && page.content?.length);
+const scenes = [
+  { src: callFromDeep, width: 2388, height: 1668, viewBox: "0 0 2388 1668" },
+  { src: sceneThree, width: 1714, height: 2668, viewBox: "0 0 1714 2668" },
+  { src: sceneOne, width: 1714, height: 2668, viewBox: "0 0 1714 2668" },
+  // Ignore this export's transparent padding without modifying the original file.
+  { src: legacy, width: 1875, height: 3204, viewBox: "123 253 1664 1518" },
+];
+
+function ArtworkLayer({ src }) {
+  return (
+    <img
+      className="game__layer"
+      src={src}
+      alt=""
+      width="1760"
+      height="3808"
+      draggable={false}
+    />
+  );
+}
+
 export default function Game() {
-  const navigate = useNavigate();
   const { page } = useParams();
-  const { pages } = chapter;
-  const pageIndex = pages.findIndex((entry) => entry.id === page);
+  const pageNumber = Number(page);
+  // Assign once per visit so returning to a dialogue keeps the same illustration.
+  const [pageScenes] = useState(() => dialoguePages.map(() => (
+    scenes[Math.floor(Math.random() * scenes.length)]
+  )));
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [page]);
-
-  if (!page) {
-    return <Navigate to={`/game/${pages[0].id}`} replace />;
+  if (!/^[1-9]\d*$/.test(page ?? "") || !Number.isSafeInteger(pageNumber) || pageNumber > dialoguePages.length) {
+    return <Navigate to="/game/1" replace />;
   }
 
-  if (pageIndex === -1) {
-    return (
-      <main className="story-reader story-reader--missing">
-        <h1>Story page not found</h1>
-        <p>This page is not part of the chapter.</p>
-        <button onClick={() => navigate("/game")}>Open chapter</button>{" "}
-        <button onClick={() => navigate("/starting")}>Main Screen</button>
-      </main>
-    );
-  }
+  // A route change also cancels any unfinished image load for the previous page.
+  return <GamePage key={pageNumber} pageIndex={pageNumber - 1} pageScenes={pageScenes} />;
+}
 
-  const currentPage = pages[pageIndex];
-  const character = chapter.characters[currentPage.speaker];
-  const previousPage = pages[pageIndex - 1];
-  const nextPage = pages[pageIndex + 1];
+function GamePage({ pageIndex, pageScenes }) {
+  const navigate = useNavigate();
+  const [changingPage, setChangingPage] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const pendingPage = useRef(null);
+  const dialogue = dialoguePages[pageIndex].content.join("\n\n");
+  const scene = pageScenes[pageIndex];
+
+  useEffect(() => () => { pendingPage.current = null; }, []);
+
+  async function changePage(direction) {
+    const nextIndex = Math.max(0, Math.min(dialoguePages.length - 1, pageIndex + direction));
+    if (pendingPage.current || nextIndex === pageIndex) return;
+
+    const request = {};
+    pendingPage.current = request;
+    setChangingPage(true);
+    setImageError(false);
+
+    try {
+      const image = new Image();
+      image.src = pageScenes[nextIndex].src;
+      await image.decode();
+      // Keep the current picture and dialogue until the next image is ready.
+      if (pendingPage.current === request) navigate(`/game/${nextIndex + 1}`);
+    } catch {
+      if (pendingPage.current === request) setImageError(true);
+    } finally {
+      if (pendingPage.current === request) {
+        pendingPage.current = null;
+        setChangingPage(false);
+      }
+    }
+  }
 
   return (
-    <main className={`story-reader story-reader--${currentPage.template}`}>
-      <header className="story-reader__header">
-        <h1>{chapter.title}</h1>
-        <p>Page {pageIndex + 1} of {pages.length}</p>
-      </header>
-
-      {currentPage.template === "archive" ? (
-        <ArchivePage key={currentPage.id} page={currentPage} />
-      ) : (
-        <DialoguePage key={currentPage.id} page={currentPage} character={character} />
-      )}
-
-      <footer className="story-reader__footer">
-        {!nextPage && <p>End of chapter.</p>}
-        <nav className="story-reader__controls" aria-label="Story pages">
-          <button disabled={!previousPage} onClick={() => navigate(`/game/${previousPage.id}`)}>
-            Previous Page
+    <main className="game" aria-label="Story">
+      <div className="game__canvas" aria-busy={changingPage}>
+        {backgroundLayers.map((src) => <ArtworkLayer key={src} src={src} />)}
+        <div className="game__scene-mask" aria-hidden="true">
+          <svg
+            key={scene.src}
+            className="game__scene"
+            viewBox={scene.viewBox}
+            preserveAspectRatio="xMidYMid slice"
+            focusable="false"
+          >
+            <image href={scene.src} width={scene.width} height={scene.height} />
+          </svg>
+        </div>
+        {foregroundLayers.map((src) => <ArtworkLayer key={src} src={src} />)}
+        <p className="game__dialogue" aria-live="polite" aria-atomic="true">
+          <span className="game__dialogue-shadow" aria-hidden="true">{dialogue}</span>
+          <span className="game__dialogue-text">{dialogue}</span>
+        </p>
+        {imageError && (
+          <p className="game__image-error" role="alert">
+            Image could not load. Please try again.
+          </p>
+        )}
+        <ArtworkLayer src={fishingHook} />
+        <ArtworkLayer src={paperclip} />
+        <nav className="game__tools" aria-label="Story options">
+          <Link className="game__tool" to="/starting" aria-label="Back to home">
+            <img src={homeIcon} alt="" width="152" height="152" draggable={false} />
+          </Link>
+          <button className="game__tool" type="button" aria-label="Inventory" disabled>
+            <img src={inventoryIcon} alt="" width="152" height="152" draggable={false} />
           </button>
-          <button disabled={!nextPage} onClick={() => navigate(`/game/${nextPage.id}`)}>
-            Next Page
+          <button className="game__tool" type="button" aria-label="Settings" disabled>
+            <img src={settingsIcon} alt="" width="152" height="152" draggable={false} />
           </button>
         </nav>
-        <nav className="story-reader__controls" aria-label="Game options">
-          <button onClick={() => navigate("/inventory", { state: { from: `/game/${currentPage.id}` } })}>
-            Inventory
-          </button>
-          <button onClick={() => navigate(`/game/${currentPage.id}/settings`)}>Settings</button>
-          <button onClick={() => navigate(`/game/${currentPage.id}/save-load`)}>Save / Load</button>
-          <button onClick={() => navigate("/starting")}>Main Screen</button>
-        </nav>
-      </footer>
+        <button
+          className="game__page-button game__page-button--previous"
+          type="button"
+          aria-label="Previous dialogue"
+          disabled={changingPage || pageIndex === 0}
+          onClick={() => changePage(-1)}
+        />
+        <button
+          className="game__page-button game__page-button--next"
+          type="button"
+          aria-label="Next dialogue"
+          disabled={changingPage || pageIndex === dialoguePages.length - 1}
+          onClick={() => changePage(1)}
+        />
+      </div>
     </main>
   );
 }

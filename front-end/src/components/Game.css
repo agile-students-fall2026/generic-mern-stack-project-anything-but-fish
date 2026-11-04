@@ -1,192 +1,164 @@
-body:has(.story-reader) {
-  margin: 0;
+.game {
+  --game-base-width: 394px;
+
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: clip;
+  background: #000;
 }
 
-.story-reader,
-.story-reader * {
-  box-sizing: border-box;
+.game__canvas {
+  container-type: inline-size;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* Use the same screen fitting rule as Register, with this artwork's ratio. */
+  width: min(100%, max(var(--game-base-width), calc(100vh * 1760 / 3808)));
+  width: min(100%, max(var(--game-base-width), calc(100svh * 1760 / 3808)));
+  aspect-ratio: 1760 / 3808;
+  transform: translate(-50%, -50%);
 }
 
-.story-reader {
-  position: relative;
-  min-height: 100svh;
-  color: #222;
-}
-
-.story-reader__header {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.85rem 1rem;
-  border-bottom: 1px solid #aaa;
-  background: rgb(255 255 255 / 75%);
-}
-
-.story-reader__header h1 {
-  margin: 0;
-  font-size: 1.1rem;
-}
-
-.story-reader__header p {
-  flex-shrink: 0;
-  margin: 0;
-  font-size: 0.85rem;
-}
-
-.story-reader__footer {
-  position: relative;
-  width: 100%;
-  max-width: 60rem;
-  margin: 0 auto;
-  padding: 0.5rem 1rem 1rem;
-}
-
-.story-reader__controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.story-reader--dialogue {
-  display: flex;
-  flex-direction: column;
-  isolation: isolate;
-  background: #d9d9d9;
-}
-
-.story-dialogue {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  min-height: 0;
-}
-
-.story-dialogue__background {
+.game__layer {
   position: absolute;
   inset: 0;
-  z-index: -1;
-  overflow: hidden;
-}
-
-.story-dialogue__background img {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
 }
 
-.story-dialogue__background-placeholder {
-  padding: 2rem clamp(1.5rem, 5vw, 4rem) 1rem;
-  color: #555;
-  line-height: 1.5;
+.game__tools {
+  position: absolute;
+  left: calc(104 / 1760 * 100%);
+  top: calc(236 / 3808 * 100%);
+  width: calc(152 / 1760 * 100%);
+  display: flex;
+  flex-direction: column;
+  gap: calc(99 / 1760 * 100cqw);
 }
 
-.story-dialogue__background-placeholder p {
-  max-width: 60ch;
-  white-space: pre-line;
-}
-
-.story-dialogue__foreground {
-  position: relative;
-  align-self: center;
+.game__tool {
+  display: block;
   width: 100%;
-  max-width: 60rem;
-  margin-top: auto;
-  padding: 2rem 1rem 0;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
 }
 
-.story-dialogue__portrait {
-  display: grid;
-  place-items: center;
-  width: clamp(4.5rem, 18vw, 7rem);
-  aspect-ratio: 4 / 5;
-  border: 1px solid #999;
-  border-bottom: 0;
-  background: rgb(255 255 255 / 85%);
-  color: #555;
-  font-size: 0.85rem;
-}
-
-.story-dialogue__portrait img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.story-dialogue__box {
-  min-height: 7.5rem;
-  padding: 1rem;
-  border: 1px solid #999;
-  background: rgb(255 255 255 / 85%);
-  line-height: 1.6;
-}
-
-.story-reader__speaker {
-  margin: 0 0 0.5rem;
-  font-size: 1rem;
-}
-
-.story-dialogue__box p {
-  margin: 0 0 0.75rem;
-}
-
-.story-dialogue__box p:last-child {
-  margin-bottom: 0;
-}
-
-.story-reader--archive {
-  background: #e8e8e6;
-}
-
-.story-archive {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1.5rem;
-  width: min(calc(100% - 2rem), 52rem);
-  margin: 1rem auto;
-  padding: clamp(1rem, 3vw, 2.5rem);
-  border: 1px solid #aaa;
-  background: #fafaf8;
-}
-
-.story-archive__photo {
-  min-width: 0;
-  margin: 0;
-}
-
-.story-archive__photo img {
+.game__tool img {
   display: block;
   width: 100%;
   height: auto;
+  pointer-events: none;
+  user-select: none;
 }
 
-.story-archive__photo-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: 10rem;
-  aspect-ratio: 16 / 9;
-  padding: 1rem;
-  border: 1px solid #aaa;
-  background: #dededb;
-  text-align: center;
-  color: #555;
-  line-height: 1.5;
+.game__tool:focus-visible {
+  outline: 2px solid #a6eeee;
+  outline-offset: 2px;
 }
 
-.story-archive__photo-placeholder p {
-  margin: 0.5rem 0 0;
+.game__tool:disabled {
+  opacity: 1;
+  cursor: default;
 }
 
-.story-archive__text {
+.game__scene-mask {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mask-image: url("../assets/game/story-illustration.png");
+  mask-mode: alpha;
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+}
+
+.game__scene {
+  position: absolute;
+  left: calc(63 / 1760 * 100%);
+  top: calc(224 / 3808 * 100%);
+  width: calc(1664 / 1760 * 100%);
+  height: calc(2322 / 3808 * 100%);
+  /* SVG slice preserves the image ratio and covers the whole masked area. */
+  overflow: hidden;
+}
+
+/* Design coordinates and font metrics scale with the 1760 × 3808 canvas. */
+.game__dialogue {
+  position: absolute;
+  left: calc(315 / 1760 * 100%);
+  top: calc(3437 / 3808 * 100%);
+  width: calc(1050 / 1760 * 100%);
   margin: 0;
-  line-height: 1.7;
+  color: #646064;
+  font-family: "Chakra Petch", sans-serif;
+  font-size: calc(63 / 1760 * 100cqw);
+  font-weight: 600;
+  line-height: calc(81 / 63);
+  letter-spacing: 0.01em;
+  white-space: pre-line;
+  transform: translateY(-50%);
 }
 
-.story-reader--missing {
-  padding: 1rem;
+.game__dialogue-text {
+  position: relative;
+}
+
+.game__dialogue-shadow {
+  position: absolute;
+  inset: 0;
+  color: #a0aa9c;
+  opacity: 0.46;
+  /* A 10px stroke expands 5px outward; blur matches a 15px shadow blur. */
+  -webkit-text-stroke: calc(10 / 1760 * 100cqw) #a0aa9c;
+  filter: blur(calc(7.5 / 1760 * 100cqw));
+  pointer-events: none;
+  user-select: none;
+}
+
+.game__image-error {
+  position: absolute;
+  left: calc(315 / 1760 * 100%);
+  top: calc(3610 / 3808 * 100%);
+  width: calc(1050 / 1760 * 100%);
+  margin: 0;
+  color: #646064;
+  font: 600 2cqw / 1.2 "Chakra Petch", sans-serif;
+}
+
+.game__page-button {
+  position: absolute;
+  left: calc(70 / 1760 * 100%);
+  width: calc(105 / 1760 * 100%);
+  height: calc(190 / 3808 * 100%);
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.game__page-button--previous {
+  top: calc(3150 / 3808 * 100%);
+}
+
+.game__page-button--next {
+  top: calc(3530 / 3808 * 100%);
+}
+
+.game__page-button:focus-visible {
+  outline: 2px solid #a6eeee;
+  outline-offset: 2px;
+}
+
+.game__page-button:disabled {
+  cursor: default;
 }

@@ -1,7 +1,27 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import AuthLayout from "./AuthLayout";
+import AuthPage from "./AuthPage";
+
+const fields = [
+  {
+    name: "email",
+    label: "Email",
+    type: "email",
+    autoComplete: "username",
+    autoCapitalize: "none",
+    spellCheck: false,
+    maxLength: 254,
+    required: true,
+  },
+  {
+    name: "password",
+    label: "Password",
+    type: "password",
+    autoComplete: "current-password",
+    required: true,
+  },
+];
 
 export default function Login() {
   const { login } = useAuth();
@@ -21,16 +41,23 @@ export default function Login() {
     } catch (error) { setError(error.message); }
     finally { setBusy(false); }
   }
-  return <AuthLayout title="Log In">
-    {error && <p role="alert">{error}</p>}
-    <form onSubmit={submit} aria-busy={busy}>
-      <fieldset disabled={busy}>
-        <div><label htmlFor="email">Email</label>{" "}<input id="email" name="email" type="email" autoComplete="username" required maxLength={254} /></div>
-        <div><label htmlFor="password">Password</label>{" "}<input id="password" name="password" type="password" autoComplete="current-password" required /></div>
-        <button type="submit">{busy ? "Logging in…" : "Log In"}</button>
-      </fieldset>
-    </form>
-    <p><Link to="/password-recovery">Forgot password?</Link></p>
-    <p><Link to="/register">Sign Up</Link></p>
-  </AuthLayout>;
+  return (
+    <AuthPage
+      variant="login"
+      title="Log In"
+      fields={fields}
+      onSubmit={submit}
+      busy={busy}
+      error={error}
+      buttonLabel="Log In"
+      busyLabel="Logging in…"
+      footer={(
+        <>
+          <Link to="/password-recovery">Forgot password?</Link>
+          <Link to="/register">Register</Link>
+          <Link to="/">Home</Link>
+        </>
+      )}
+    />
+  );
 }
