@@ -1,0 +1,351 @@
+.plots {
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: clip;
+  background: #000;
+}
+
+.plots__canvas {
+  container-type: inline-size;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(100%, max(394px, calc(100vh * 1500 / 3249)));
+  width: min(100%, max(394px, calc(100svh * 1500 / 3249)));
+  aspect-ratio: 1500 / 3249;
+  transform: translate(-50%, -50%);
+}
+
+.plots__artwork,
+.plots__layer {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+
+.plots__category {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* The clipped hit areas follow the plaques, not their transparent canvases. */
+.plots__category--characters {
+  left: 4.33333%;
+  top: 2.03139%;
+  width: 62.66667%;
+  height: 28.40874%;
+  clip-path: polygon(
+    67.5532% 1.7335%, 60.7447% 1.3001%, 47.1277% 9.7508%,
+    6.0638% 41.3868%, 5.1064% 40.5200%, 2.5532% 45.3954%,
+    1.0638% 52.9794%, 4.0426% 57.8548%, 36.5957% 95.8830%,
+    42.2340% 95.0163%, 55.2128% 83.8570%, 91.2766% 57.7465%,
+    96.7021% 52.0043%, 96.9149% 47.7790%, 98.4043% 45.9372%,
+    98.1915% 40.5200%, 86.9149% 28.0607%, 81.8085% 19.5016%
+  );
+}
+
+.plots__category--chapters {
+  left: 35.4%;
+  top: 20.06771%;
+  width: 56.46667%;
+  height: 20.62173%;
+  clip-path: polygon(
+    77.9221% 0.2985%, 64.6989% 3.2836%, 3.4238% 25.8209%,
+    0.4723% 38.6567%, 16.1747% 91.1940%, 19.7166% 93.2836%,
+    21.4876% 98.2090%, 25.9740% 99.1045%, 95.9858% 71.0448%,
+    99.4097% 65.2239%, 98.2290% 55.2239%, 88.5478% 11.9403%
+  );
+}
+
+.plots__category--objects {
+  left: 14.4%;
+  top: 43.02862%;
+  width: 52.6%;
+  height: 16.31271%;
+  clip-path: polygon(
+    10.1394% 2.4528%, 0.3802% 69.4340%, 2.9151% 81.5094%,
+    4.9430% 82.0755%, 7.3511% 90.9434%, 11.7871% 94.3396%,
+    85.8048% 99.4340%, 92.7757% 89.4340%, 96.4512% 64.7170%,
+    99.3663% 26.7925%, 96.5779% 19.8113%, 94.8035% 19.2453%,
+    92.1420% 10.3774%, 20.7858% 0.5660%
+  );
+}
+
+.plots__category:focus-visible {
+  outline: none;
+  background: rgb(255 255 255 / 22%);
+}
+
+@media (hover: hover) {
+  .plots__category:hover {
+    background: rgb(255 255 255 / 8%);
+  }
+}
+
+.plots__home {
+  position: absolute;
+  right: 6%;
+  top: max(
+    calc(80 / 3249 * 100%),
+    calc((100% - 100svh) / 2 + max(8px, env(safe-area-inset-top)))
+  );
+  width: 8%;
+  touch-action: manipulation;
+}
+
+.plots__home img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+.plots__home:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* On very short screens, let the artwork scroll so every plaque stays reachable. */
+@media (max-height: 500px) {
+  .plots {
+    overflow-y: auto;
+  }
+
+  .plots__canvas {
+    position: relative;
+    top: 0;
+    transform: translateX(-50%);
+  }
+
+  .plots__home {
+    top: max(8px, env(safe-area-inset-top));
+  }
+}
+
+.plots__overlay {
+  position: fixed;
+  inset: 0;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: max(16px, env(safe-area-inset-top))
+    max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom))
+    max(20px, env(safe-area-inset-left));
+  border: 0;
+  background: rgb(0 0 0 / 86%);
+  color: #fff;
+  font-family: AmericanTypewriter, Georgia, serif;
+}
+
+.plots__overlay[open] {
+  display: grid;
+  place-items: center;
+}
+
+.plots__overlay::backdrop {
+  background: transparent;
+}
+
+.plots__panel {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 38rem);
+  height: 100%;
+  max-height: 58rem;
+  min-height: 0;
+}
+
+.plots__toolbar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.plots__return,
+.plots__close {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 8px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: 16px / 1.3 "Chakra Petch", sans-serif;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.plots__return span {
+  margin-right: 8px;
+}
+
+.plots__close {
+  padding: 0;
+  font-size: 32px;
+}
+
+.plots__views {
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  flex: 1;
+  min-height: 0;
+}
+
+.plots__list-pane,
+.plots__detail {
+  grid-area: 1 / 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+.plots__list-pane {
+  display: flex;
+  flex-direction: column;
+}
+
+.plots__list-pane--covered {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.plots__list-title {
+  margin: 0 0 24px;
+  font-size: clamp(24px, 5vw, 32px);
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.plots__list-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #aaa transparent;
+  direction: rtl;
+}
+
+.plots__list {
+  display: grid;
+  gap: 18px;
+  margin: 0;
+  padding: 2px 2px 4px 14px;
+  list-style: none;
+  direction: ltr;
+}
+
+.plots__entry {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 110px;
+  padding: 20px;
+  border: 2px solid #aaa;
+  border-radius: 8px;
+  background: rgb(0 0 0 / 35%);
+  color: inherit;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.plots__entry-title {
+  font-size: clamp(18px, 4.6vw, 26px);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.plots__entry-meta {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.plots__entry-line {
+  position: relative;
+  flex: 1;
+  border-top: 1px solid #777;
+}
+
+.plots__entry-line::before,
+.plots__entry-line::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  height: 7px;
+  border-left: 1px solid #777;
+}
+
+.plots__entry-line::before { left: 0; }
+.plots__entry-line::after { right: 0; }
+
+.plots__entry-count {
+  flex: none;
+  color: #c3aa50;
+  font: clamp(15px, 3.8vw, 20px) / 1.3 "Chakra Petch", sans-serif;
+  white-space: nowrap;
+}
+
+.plots__return:focus-visible,
+.plots__close:focus-visible,
+.plots__entry:focus-visible {
+  outline: 2px solid #e6dbb9;
+  outline-offset: -5px;
+}
+
+.plots__entry:hover {
+  border-color: #e6dbb9;
+}
+
+.plots__detail {
+  display: flex;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.plots__detail-copy {
+  width: min(100%, 32rem);
+  margin: auto;
+  padding: 24px 0;
+}
+
+.plots__detail-copy h1 {
+  margin: 0 0 20px;
+  font-size: clamp(24px, 5vw, 32px);
+  font-weight: 600;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  outline: none;
+}
+
+.plots__detail-copy p {
+  margin: 0 0 16px;
+  font-size: clamp(16px, 3.5vw, 20px);
+  line-height: 1.6;
+}
+
+.plots__detail-copy .plots__detail-category {
+  color: #c3aa50;
+  font: 14px / 1.4 "Chakra Petch", sans-serif;
+}
