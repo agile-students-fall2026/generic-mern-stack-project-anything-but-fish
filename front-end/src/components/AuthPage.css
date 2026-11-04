@@ -1,0 +1,226 @@
+.auth-page {
+  --auth-page-base-width: 394px;
+
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: clip;
+  background: #000;
+}
+
+.auth-page__canvas {
+  container-type: inline-size;
+  position: absolute;
+  margin: 0;
+  top: 50%;
+  left: 50%;
+  width: min(100%, max(var(--auth-page-base-width), calc(100vh * 1500 / 3249)));
+  width: min(
+    100%,
+    max(var(--auth-page-base-width), calc(100svh * 1500 / 3249))
+  );
+  aspect-ratio: 1500 / 3249;
+  transform: translate(-50%, -50%);
+}
+
+.auth-page__layer {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+
+.auth-page__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* All artwork, label offsets, and input positions use the 1500 × 3249 canvas. */
+.auth-page__input {
+  position: absolute;
+  box-sizing: border-box;
+  height: calc(160 / 3249 * 100%);
+  padding: 4cqw 1cqw 0;
+  border: 0;
+  border-radius: 0;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+  color: #211c13;
+  caret-color: #211c13;
+  font-family: "Courier New", monospace;
+  font-size: clamp(16px, 4.3cqw, 26px);
+  line-height: 1.2;
+}
+
+.auth-page__input--email {
+  left: calc(560 / 1500 * 100%);
+  top: calc(1110 / 3249 * 100%);
+  width: calc(805 / 1500 * 100%);
+}
+
+.auth-page__input--password {
+  left: calc(575 / 1500 * 100%);
+  top: calc(1298 / 3249 * 100%);
+  width: calc(800 / 1500 * 100%);
+}
+
+.auth-page__input--confirmation {
+  left: calc(690 / 1500 * 100%);
+  top: calc(1500 / 3249 * 100%);
+  width: calc(720 / 1500 * 100%);
+}
+
+.auth-page--login .auth-page__label-art--email {
+  transform: translate(calc(-55 / 1500 * 100%), calc(156 / 3249 * 100%));
+}
+
+.auth-page--login .auth-page__label-art--password {
+  transform: translate(calc(-55 / 1500 * 100%), calc(187 / 3249 * 100%));
+}
+
+.auth-page--login .auth-page__input--email {
+  left: calc(505 / 1500 * 100%);
+  top: calc(1266 / 3249 * 100%);
+}
+
+.auth-page--login .auth-page__input--password {
+  left: calc(520 / 1500 * 100%);
+  top: calc(1485 / 3249 * 100%);
+}
+
+.auth-page--recovery .auth-page__label-art--email {
+  transform: translate(calc(-55 / 1500 * 100%), calc(399 / 3249 * 100%));
+}
+
+.auth-page--recovery .auth-page__input--email {
+  left: calc(505 / 1500 * 100%);
+  top: calc(1509 / 3249 * 100%);
+}
+
+.auth-page--reset .auth-page__label-art--password {
+  transform: translate(calc(-55 / 1500 * 100%), calc(-32 / 3249 * 100%));
+}
+
+.auth-page--reset .auth-page__input--password {
+  left: calc(520 / 1500 * 100%);
+  top: calc(1266 / 3249 * 100%);
+}
+
+.auth-page--reset .auth-page__label-art--confirmation {
+  transform: translateY(calc(-15 / 3249 * 100%));
+}
+
+.auth-page--reset .auth-page__input--confirmation {
+  top: calc(1485 / 3249 * 100%);
+}
+
+.auth-page__submit {
+  position: absolute;
+  left: calc(594 / 1500 * 100%);
+  top: calc(1997 / 3249 * 100%);
+  width: calc(860 / 1500 * 100%);
+  height: calc(180 / 3249 * 100%);
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #8d0f0a;
+  font:
+    700 clamp(16px, 5cqw, 30px) / 1 "Courier New",
+    monospace;
+  text-transform: uppercase;
+  transform: rotate(-5deg);
+  cursor: pointer;
+}
+
+.auth-page--login .auth-page__submit {
+  left: calc(723 / 1500 * 100%);
+  top: calc(2009 / 3249 * 100%);
+  width: calc(612 / 1500 * 100%);
+  height: calc(183 / 3249 * 100%);
+  transform: rotate(-4.16deg);
+}
+
+.auth-page__button-text {
+  /* Hide isolated export specks below the stamps without altering the PNGs. */
+  clip-path: inset(0 0 calc(999 / 3249 * 100%) 0);
+}
+
+.auth-page__button-frame {
+  opacity: 0;
+}
+
+.auth-page__submit:disabled {
+  cursor: wait;
+}
+
+.auth-page__canvas:has(.auth-page__submit:is(:hover, :focus, :active))
+  .auth-page__button-frame {
+  opacity: 1;
+}
+
+.auth-page__feedback {
+  position: absolute;
+  bottom: calc(max(8px, env(safe-area-inset-bottom)) + 40px);
+  left: 50%;
+  box-sizing: border-box;
+  width: min(calc(100% - 2rem), 28rem);
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid #7d171b;
+  background: #eee1b8;
+  color: #7d171b;
+  font:
+    1rem / 1.4 "Courier New",
+    monospace;
+  overflow-wrap: anywhere;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.auth-page__footer {
+  position: absolute;
+  bottom: max(8px, env(safe-area-inset-bottom));
+  left: 50%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px 18px;
+  width: min(calc(100% - 24px), 28rem);
+  font:
+    600 12px / 1.5 "Chakra Petch",
+    sans-serif;
+  /* Match the guest link's 50/1760 canvas ratio and 12px minimum. */
+  font-size: max(
+    12px,
+    calc(
+      min(100vw, max(var(--auth-page-base-width), 100svh * 1500 / 3249)) * 50 /
+        1760
+    )
+  );
+  transform: translateX(-50%);
+}
+
+.auth-page__footer a {
+  color: #000;
+  text-underline-offset: 0.2em;
+}
+
+.auth-page__footer a:hover {
+  color: #000;
+}
+
+.auth-page__footer a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
