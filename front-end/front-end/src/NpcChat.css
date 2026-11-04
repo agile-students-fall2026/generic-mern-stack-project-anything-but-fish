@@ -1,0 +1,102 @@
+/* Handwriting font from Google Fonts (@import must stay the first line) */
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap");
+
+:root {
+  --ink: #000; --paper: #fff; --panel: #d9d9d9; --input: #7f7f7f;
+  --hand: "Caveat", "Segoe Print", "Bradley Hand", cursive; /* handwriting look */
+}
+
+body { margin: 0; font-family: Inter, system-ui, sans-serif; background: #222; }
+
+.screen {
+  position: relative;
+  max-width: 420px;          /* phone-shaped column */
+  min-height: 100vh;
+  margin: 0 auto;
+  background: var(--paper);
+  box-sizing: border-box;
+}
+
+/* Background image for the chapters and characters pages (url is set in the JSX) */
+.page-bg {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #bbb; /* shown if the image is missing */
+}
+
+/* Round backing so the arrow is visible on any background image */
+.back-btn {
+  position: absolute; top: 14px; left: 16px; z-index: 2;
+  width: 40px; height: 40px; border-radius: 50%;
+  border: none; background: rgba(255, 255, 255, 0.85);
+  font-size: 24px; line-height: 1; cursor: pointer; color: #333;
+}
+.back-btn:focus-visible, .chapter-tile:focus-visible, .character-card:focus-visible,
+.composer button:focus-visible, .composer input:focus-visible {
+  outline: 3px solid #3b82f6; outline-offset: 2px;
+}
+
+/* Shared 2-column grid */
+.tile-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px 24px;
+  padding: 100px 28px 40px;
+}
+
+/* ---- Chapter tiles: picture with handwritten title on top ---- */
+.chapter-tile {
+  position: relative; aspect-ratio: 8 / 7; padding: 0; border: none;
+  background: var(--ink); overflow: hidden; cursor: pointer;
+}
+.chapter-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.chapter-title {
+  position: absolute; top: 8px; left: 0; right: 0; text-align: center;
+  font-family: var(--hand); font-weight: 700; font-size: 28px; color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8); /* keeps text readable on any art */
+}
+.chapter-tile:hover { transform: scale(1.03); }
+
+/* ---- Character cards: picture, name underneath ---- */
+.character-card {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 0; border: none; background: none; cursor: pointer;
+}
+.character-card img {
+  width: 100%; aspect-ratio: 8 / 7; object-fit: cover; display: block;
+  background: var(--ink);
+}
+.character-name {
+  align-self: center; padding: 2px 12px; border-radius: 10px;
+  background: rgba(255, 255, 255, 0.85); /* readable on any background */
+  font-family: var(--hand); font-weight: 700; font-size: 24px; color: var(--ink);
+}
+.character-card:hover img { filter: brightness(1.1); }
+
+/* ---- Chat screen ---- */
+.chat-screen { display: flex; flex-direction: column; height: 100vh; }
+.scene {
+  position: relative; flex: 0 0 38%; background: var(--panel);
+  display: flex; align-items: center; justify-content: center;
+}
+.scene img { width: 100%; height: 100%; object-fit: cover; }
+.scene-label { font-size: 22px; }
+
+.chat-area { flex: 1; display: flex; flex-direction: column; padding: 20px 28px 10px; min-height: 0; }
+.speaker-bar { background: var(--panel); padding: 6px 8px; width: fit-content; font-size: 15px; margin-bottom: 18px; }
+
+.chat-box { flex: 1; background: var(--panel); padding: 12px; overflow-y: auto; min-height: 0; }
+.empty { text-align: center; color: #555; margin-top: 30px; }
+
+.bubble-row { display: flex; flex-direction: column; margin-bottom: 10px; max-width: 80%; }
+.bubble-row.you { margin-left: auto; align-items: flex-end; }
+.bubble-row.npc { margin-right: auto; align-items: flex-start; }
+.bubble { background: var(--paper); border: 2px solid var(--ink); border-radius: 12px; padding: 8px 12px; overflow-wrap: anywhere; }
+.who { font-size: 12px; margin-top: 2px; color: #333; }
+
+.composer { display: flex; gap: 10px; margin-top: 14px; }
+.composer input { flex: 1; background: var(--input); border: none; padding: 10px 8px; font: inherit; color: #fff; }
+.composer input::placeholder { color: #eee; }
+.composer button { background: var(--ink); color: var(--paper); border: none; padding: 0 22px; font: inherit; cursor: pointer; }
+.composer button:disabled { opacity: .4; cursor: not-allowed; }
+
+.sent-note { margin: 8px 0 0; font-size: 14px; min-height: 1.2em; }
