@@ -1,16 +1,17 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../auth/AuthContext";
-import AuthLayout from "./AuthLayout";
+import MainMenuLayout from "./MainMenuLayout";
+
+const menuItems = [
+  { label: "Sign Up", path: "/register" },
+  { label: "Login", path: "/login" },
+];
 
 export default function Welcome() {
-  const { user } = useAuth();
-  return <AuthLayout title="Welcome">
-    <p>Explore the story of Anything but Fish.</p>
-    <div className="d-grid gap-2">
-      {user ? <Link className="btn btn-primary" to="/starting">Continue</Link> : <>
-        <Link className="btn btn-primary" to="/register">Sign Up</Link>
-        <Link className="btn btn-outline-primary" to="/login">Log In</Link>
-      </>}
-    </div>
-  </AuthLayout>;
+  return (
+    <MainMenuLayout
+      label="Welcome"
+      menuItems={menuItems}
+      footer={<Link to="/starting">Continue without logging in</Link>}
+    />
+  );
 }

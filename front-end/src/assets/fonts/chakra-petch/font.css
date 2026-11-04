@@ -1,0 +1,7 @@
+@font-face {
+  font-family: "Chakra Petch";
+  src: url("./ChakraPetch-SemiBold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}

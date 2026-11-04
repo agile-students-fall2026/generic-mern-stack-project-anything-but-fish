@@ -1,7 +1,21 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { authRequest } from "../lib/auth-api";
-import AuthLayout from "./AuthLayout";
+import AuthPage from "./AuthPage";
+
+const fields = [
+  {
+    name: "email",
+    label: "Email",
+    type: "email",
+    autoComplete: "email",
+    autoCapitalize: "none",
+    spellCheck: false,
+    maxLength: 254,
+    required: true,
+    help: "Enter your email to receive a password reset link.",
+  },
+];
 
 export default function PasswordRecovery() {
   const [sent, setSent] = useState(false);
@@ -18,15 +32,25 @@ export default function PasswordRecovery() {
     } catch (error) { setError(error.message); }
     finally { setBusy(false); }
   }
-  return <AuthLayout title="Password Recovery">
-    {error && <p className="alert alert-danger" role="alert">{error}</p>}
-    {sent ? <p className="alert alert-success" role="status">If an account exists for that email, you will receive a password reset link.</p> : <>
-      <p>Enter your email to receive a password reset link.</p>
-      <form onSubmit={submit} aria-busy={busy}><fieldset disabled={busy}>
-        <div className="mb-3"><label className="form-label" htmlFor="email">Email</label><input className="form-control" id="email" name="email" type="email" autoComplete="email" maxLength={254} required /></div>
-        <button className="btn btn-primary w-100" type="submit">{busy ? "Sending…" : "Send Reset Link"}</button>
-      </fieldset></form>
-    </>}
-    <Link className="d-inline-block mt-3" to="/login">Back to Log In</Link>
-  </AuthLayout>;
+  return (
+    <AuthPage
+      variant="recovery"
+      title="Password Recovery"
+      fields={fields}
+      onSubmit={submit}
+      busy={busy}
+      error={error}
+      status={sent ? "If an account exists for that email, you will receive a password reset link." : ""}
+      hideControls={sent}
+      buttonLabel="Send Reset Link"
+      busyLabel="Sending…"
+      footer={(
+        <>
+          <Link to="/login">Login</Link>
+          <Link to="/register">Register</Link>
+          <Link to="/">Home</Link>
+        </>
+      )}
+    />
+  );
 }
