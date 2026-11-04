@@ -1,0 +1,112 @@
+.choose-character {
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: clip;
+  background: #000;
+}
+
+.choose-character__canvas {
+  container-type: inline-size;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(100%, max(394px, calc(100vh * 1500 / 3249)));
+  width: min(100%, max(394px, calc(100svh * 1500 / 3249)));
+  aspect-ratio: 1500 / 3249;
+  overflow: clip;
+  transform: translate(-50%, -50%);
+}
+
+.choose-character__background {
+  position: absolute;
+  top: 0;
+  left: -6.8%;
+  display: block;
+  /* Enlarge the environment's visible area to fill the reference canvas. */
+  width: 139%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+.choose-character__back {
+  position: absolute;
+  left: calc(114 / 1500 * 100%);
+  top: max(calc(124 / 3249 * 100%), calc((100% - 100svh) / 2 + max(12px, env(safe-area-inset-top))));
+  width: calc(152 / 1500 * 100%);
+  touch-action: manipulation;
+}
+
+.choose-character__back img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+.choose-character__back:focus-visible {
+  outline: 2px solid #d0d7d2;
+  outline-offset: 2px;
+}
+
+.choose-character__list {
+  position: absolute;
+  left: calc(182 / 1500 * 100%);
+  right: calc(182 / 1500 * 100%);
+  /* Keep the list below Back when a short screen crops the canvas. */
+  top: max(calc(414 / 3249 * 100%), calc((100% - 100svh) / 2 + max(12px, env(safe-area-inset-top)) + calc(250 / 1500 * 100cqw)));
+  bottom: max(calc(100 / 3249 * 100%), calc((100% - 100svh) / 2 + max(16px, env(safe-area-inset-bottom))));
+  display: flex;
+  flex-direction: column;
+  gap: calc(54 / 1500 * 100cqw);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.choose-character__button {
+  flex: none;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  aspect-ratio: 1136 / 329;
+  padding: 0 8%;
+  border: 0;
+  /* Stretch only the artwork; keep the text at the homepage's font size. */
+  background: url("../assets/main-screen/button.png") center / 100% 100% no-repeat;
+  color: #000;
+  font-family: "Chakra Petch", sans-serif;
+  font-size: calc(93 / 1760 * 100cqw);
+  font-weight: 600;
+  line-height: calc(121 / 93);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.choose-character__button:hover {
+  filter: brightness(1.08);
+}
+
+.choose-character__button:active {
+  filter: brightness(0.9);
+}
+
+.choose-character__button:focus-visible {
+  outline: 2px solid #d0d7d2;
+  outline-offset: -5px;
+}
+
+.choose-character__cat {
+  position: absolute;
+  left: calc(1100 / 1500 * 100%);
+  top: calc(2892 / 3249 * 100%);
+  width: calc(114 / 1500 * 100%);
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
