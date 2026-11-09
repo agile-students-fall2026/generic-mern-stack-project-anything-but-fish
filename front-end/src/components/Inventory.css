@@ -1,0 +1,192 @@
+.inventory-popup .game-popup__body {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.inventory__workspace {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  isolation: isolate;
+}
+
+.inventory__scroll {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  padding: 2px 4px 12px 2px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #a2937b transparent;
+}
+
+.inventory__status {
+  margin-bottom: 16px;
+}
+
+.inventory__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(10px, 3vw, 20px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.inventory__slot {
+  min-width: 0;
+  aspect-ratio: 1;
+}
+
+.inventory__item,
+.inventory__empty-slot {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgb(220 210 190 / 23%);
+  background: rgb(34 23 20 / 12%);
+}
+
+.inventory__item {
+  position: relative;
+  padding: 8%;
+  border-radius: 0;
+  color: #f1e2bf;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.inventory__item:hover {
+  background: rgb(220 196 139 / 12%);
+}
+
+.inventory__item[aria-pressed="true"] {
+  border-color: #bc9a3f;
+  box-shadow: inset 0 0 0 1px #bc9a3f;
+}
+
+.inventory__item:focus-visible {
+  outline: 2px solid #f1d48a;
+  outline-offset: 2px;
+}
+
+.inventory__item-icon {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.inventory__count {
+  position: absolute;
+  right: 3px;
+  bottom: 2px;
+  min-width: 1.1em;
+  padding: 0 2px;
+  background: rgb(24 19 15 / 75%);
+  font: 600 13px / 1.2 "Chakra Petch", sans-serif;
+  text-align: center;
+}
+
+.inventory__details {
+  position: absolute;
+  z-index: 1;
+  top: 16px;
+  right: 0;
+  box-sizing: border-box;
+  width: 72%;
+  max-height: calc(100% - 20px);
+  overflow-y: auto;
+  border: 1px solid #30291e;
+  border-radius: 0;
+  background: #b8b09a;
+  color: #181610;
+  box-shadow: 0 3px 8px rgb(0 0 0 / 25%);
+  font-family: Georgia, "Times New Roman", serif;
+  scrollbar-width: thin;
+  scrollbar-color: #6c5b42 #b8b09a;
+}
+
+.inventory__details-top {
+  padding: 20px 16px 18px;
+  border-bottom: 1px solid #66563d;
+  background: #a58e68;
+}
+
+.inventory__details h2 {
+  margin: 0 24px 12px 0;
+  color: #fff9e9;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  outline: none;
+}
+
+.inventory__item-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 58px;
+  align-items: center;
+  gap: 8px;
+}
+
+.inventory__item-summary dl {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.inventory__item-summary dl > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 4px;
+}
+
+.inventory__item-summary dt::after { content: ":"; }
+.inventory__item-summary dd { margin: 0; overflow-wrap: anywhere; }
+.inventory__item-summary .inventory__item-icon { height: 58px; }
+
+.inventory__description {
+  min-height: 80px;
+  margin: 0;
+  padding: 18px 16px 22px;
+  font-size: 15px;
+  line-height: 1.5;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.inventory__details-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #2f271a;
+  font: 25px / 1 sans-serif;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.inventory__details-close:focus-visible {
+  outline: 2px solid #30291e;
+  outline-offset: -4px;
+}
+
+@media (max-width: 360px) {
+  .inventory__details { width: 78%; }
+  .inventory__details-top { padding: 18px 12px 14px; }
+  .inventory__description { padding: 14px 12px 18px; }
+  .inventory__item-summary { grid-template-columns: minmax(0, 1fr) 48px; }
+  .inventory__item-summary .inventory__item-icon { height: 48px; }
+}

@@ -1,0 +1,136 @@
+.save-load-popup {
+  color: #f1e9df;
+}
+
+.save-load__modes {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.save-load__mode,
+.save-load__action {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid rgba(218, 201, 181, 0.4);
+  border-radius: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.save-load__mode {
+  padding: 4px 8px;
+  font-size: 14px;
+}
+
+.save-load__mode[aria-pressed="true"] {
+  border-color: #d3bea1;
+  background: rgba(176, 146, 108, 0.2);
+}
+
+.save-load__slots {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.save-load__slot {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 105px;
+  padding: 0.75rem 0.875rem;
+  border: 1px solid rgba(207, 189, 169, 0.3);
+  border-radius: 0;
+  color: inherit;
+  background: rgba(73, 53, 41, 0.12);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(14px, 3.4cqw, 16px);
+  line-height: 1.4;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.save-load__slot-heading,
+.save-load__saved-time {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.save-load__slot-heading > :last-child {
+  flex-shrink: 0;
+}
+
+.save-load__chapter {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.save-load__saved-time,
+.save-load__empty {
+  margin-top: 1.5rem;
+}
+
+.save-load__saved-time {
+  flex-wrap: wrap;
+}
+
+.save-load__saved-time time {
+  margin-left: auto;
+  text-align: right;
+}
+
+.save-load__empty {
+  display: block;
+  color: #c9bdae;
+}
+
+.save-load__pending {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.save-load__slot:hover:not(:disabled),
+.save-load__mode:hover:not(:disabled),
+.save-load__action:hover:not(:disabled) {
+  background: rgba(176, 146, 108, 0.22);
+  border-color: #d3bea1;
+}
+
+.save-load__slot:focus-visible,
+.save-load__mode:focus-visible,
+.save-load__action:focus-visible {
+  outline: 2px solid #e4cfad;
+  outline-offset: 3px;
+}
+
+.save-load__slot:disabled,
+.save-load__mode:disabled {
+  cursor: default;
+}
+
+.save-load__slot:disabled .save-load__empty {
+  color: #b8aa98;
+}
+
+.save-load__confirm,
+.save-load__feedback {
+  margin: 0.75rem 0 0;
+  font-size: clamp(14px, 3.4cqw, 16px);
+  line-height: 1.4;
+}
+
+.save-load__confirm p,
+.save-load__feedback p {
+  margin: 0 0 0.5rem;
+}
+
+.save-load__confirm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}

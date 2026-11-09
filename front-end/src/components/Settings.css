@@ -1,0 +1,16 @@
+.settings-form { padding: 4px 4px 12px; }
+.settings-form fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.settings-form__control { margin-bottom: 22px; }
+.settings-form label { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; font-size: 16px; }
+.settings-form output { color: #d6c7aa; font: 14px / 1.4 Georgia, serif; font-variant-numeric: tabular-nums; }
+.settings-form input[type="range"] { display: block; box-sizing: border-box; width: 100%; height: 28px; margin: 0; background: transparent; cursor: pointer; accent-color: #c6ae80; -webkit-appearance: none; appearance: none; }
+.settings-form input[type="range"]::-webkit-slider-runnable-track { height: 5px; border: 1px solid #8f7d67; background: linear-gradient(to right, #c6ae80 var(--range-fill), #4b3f37 var(--range-fill)); }
+.settings-form input[type="range"]::-webkit-slider-thumb { width: 15px; height: 19px; margin-top: -8px; border: 1px solid #e1d3b8; border-radius: 1px; background: #ad946c; box-shadow: 1px 2px 3px #211a17; -webkit-appearance: none; }
+.settings-form input[type="range"]::-moz-range-track { height: 4px; border: 1px solid #8f7d67; background: #4b3f37; }
+.settings-form input[type="range"]::-moz-range-progress { height: 4px; background: #c6ae80; }
+.settings-form input[type="range"]::-moz-range-thumb { width: 13px; height: 17px; border: 1px solid #e1d3b8; border-radius: 1px; background: #ad946c; }
+.settings-form select { box-sizing: border-box; width: 100%; min-height: 44px; padding: 8px 12px; border: 1px solid #82715e; border-radius: 1px; background: #3d302a; color: #f6f0e6; font: 16px / 1.4 Georgia, serif; cursor: pointer; }
+.settings-form__apply { width: 100%; min-height: 44px; margin-top: 2px; padding: 8px 12px; border: 1px solid #c5b28f; border-radius: 1px; background: #a58e68; color: #201b16; font: 600 15px / 1.4 "Chakra Petch", sans-serif; cursor: pointer; }
+.settings-form :disabled { cursor: wait; opacity: .7; }
+.settings-form__feedback { margin: 12px 0 0; color: #d5e7ce; font-size: 14px; }
+.settings-form__feedback--error { color: #efc1ac; }

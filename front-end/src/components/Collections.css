@@ -120,6 +120,16 @@
   outline-offset: 2px;
 }
 
+.collections__status {
+  position: absolute;
+  top: max(96px, calc(env(safe-area-inset-top) + 72px));
+  left: 50%;
+  width: min(calc(100% - 40px), 22rem);
+  max-height: calc(100svh - 120px - env(safe-area-inset-top));
+  overflow-y: auto;
+  transform: translateX(-50%);
+}
+
 .collections__overlay {
   position: fixed;
   inset: 0;

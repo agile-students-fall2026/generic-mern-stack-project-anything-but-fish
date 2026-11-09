@@ -1,13 +1,15 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useGameData } from "../hooks/useGameData";
+import GameDataStatus from "./GameDataStatus";
 import environment from "../assets/chat/environment.png";
 import emojiCat from "../assets/chat/emoji-cat.png";
 import backIcon from "../assets/game/home-icon.png";
 import "./ChooseCharacter.css";
 
-const characters = [{ name: "cislo", displayName: "Cislobog Raskolnikova" }];
-
 export default function ChooseCharacter() {
   const navigate = useNavigate();
+  const { data, loading, error, retry } = useGameData("characters");
+  const characters = loading || error ? [] : data?.characters ?? [];
 
   return (
     <main className="choose-character" aria-label="Choose character">
@@ -34,12 +36,17 @@ export default function ChooseCharacter() {
           />
         </Link>
         <nav className="choose-character__list" aria-label="Characters">
+          {(loading || error || characters.length === 0) && (
+            <div className="choose-character__status">
+              <GameDataStatus loading={loading} error={error} onRetry={retry} emptyMessage="No characters available yet." />
+            </div>
+          )}
           {characters.map(({ name, displayName }) => (
             <button
               className="choose-character__button"
               key={name}
               type="button"
-              onClick={() => navigate(`/chat/${name}`)}
+              onClick={() => navigate(`/chat/${encodeURIComponent(name)}`)}
             >
               {displayName}
             </button>

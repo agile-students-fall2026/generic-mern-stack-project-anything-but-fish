@@ -34,7 +34,7 @@
 .game__tools {
   position: absolute;
   left: calc(104 / 1760 * 100%);
-  top: calc(236 / 3808 * 100%);
+  top: max(calc(236 / 3808 * 100%), calc((100% - 100svh) / 2 + 12px));
   width: calc(152 / 1760 * 100%);
   display: flex;
   flex-direction: column;
@@ -69,6 +69,21 @@
   opacity: 1;
   cursor: default;
 }
+
+/* Follow the cyan hook's visible shape without making its transparent canvas clickable. */
+.game__hook {
+  position: absolute;
+  left: 43%;
+  top: 68.5%;
+  width: 51%;
+  height: 10%;
+  min-height: 44px;
+  border-radius: 40% 25% 25% 50%;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.game__hook:focus-visible { outline: 2px solid #a6eeee; outline-offset: 2px; }
 
 .game__scene-mask {
   position: absolute;

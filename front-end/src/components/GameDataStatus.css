@@ -1,0 +1,30 @@
+.game-data-status {
+  box-sizing: border-box;
+  padding: 16px;
+  border: 1px solid #918a75;
+  border-radius: 4px;
+  background: rgb(0 0 0 / 88%);
+  color: #fff;
+  font: 16px / 1.5 "Chakra Petch", sans-serif;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.game-data-status p { margin: 0; }
+
+.game-data-status button {
+  min-height: 44px;
+  margin-top: 12px;
+  padding: 8px 16px;
+  border: 1px solid #e6dbb9;
+  border-radius: 3px;
+  background: #e6dbb9;
+  color: #222;
+  font: inherit;
+  cursor: pointer;
+}
+
+.game-data-status button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}

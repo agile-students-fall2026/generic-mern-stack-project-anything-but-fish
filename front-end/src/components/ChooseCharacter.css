@@ -66,6 +66,11 @@
   scrollbar-width: thin;
 }
 
+.choose-character__status {
+  flex: none;
+  min-width: 0;
+}
+
 .choose-character__button {
   flex: none;
   display: grid;

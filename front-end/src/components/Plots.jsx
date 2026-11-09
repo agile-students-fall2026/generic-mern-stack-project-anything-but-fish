@@ -5,13 +5,16 @@ import characters from "../assets/plots/characters.png";
 import chapters from "../assets/plots/chapters.png";
 import objects from "../assets/plots/objects.png";
 import backIcon from "../assets/game/home-icon.png";
-import { plotCategories } from "../content/plots";
+import { useGameData } from "../hooks/useGameData";
+import GameDataStatus from "./GameDataStatus";
 import "./Plots.css";
 
 export default function Plots() {
   const { category: categoryId, entryId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const { data, loading, error, retry } = useGameData("plots");
+  const plotCategories = data?.categories ?? [];
   const category = plotCategories.find((item) => item.id === categoryId);
   const entry = category?.entries.find((item) => item.id === entryId);
   const dialogRef = useRef(null);
@@ -28,10 +31,10 @@ export default function Plots() {
     if (category) {
       if (!dialog.open) {
         dialog.showModal();
-        closeRef.current.focus({ preventScroll: true });
+        closeRef.current?.focus({ preventScroll: true });
       }
       if (entry) {
-        detailHeadingRef.current.focus({ preventScroll: true });
+        detailHeadingRef.current?.focus({ preventScroll: true });
       } else if (previous.category === category.id && previous.entry) {
         entryButtons.current.get(previous.entry)?.focus({ preventScroll: true });
       }
@@ -54,8 +57,9 @@ export default function Plots() {
     else navigate(`/plots/${category.id}`, { replace: true });
   }
 
-  if (categoryId && !category) return <Navigate to="/plots" replace />;
-  if (entryId && !entry) return <Navigate to={`/plots/${category.id}`} replace />;
+  // Wait for the API before treating a deep link as an unknown entry.
+  if (data && categoryId && !category) return <Navigate to="/plots" replace />;
+  if (data && entryId && !entry) return <Navigate to={`/plots/${category.id}`} replace />;
 
   return (
     <main className="plots" aria-label="Plots">
@@ -81,6 +85,12 @@ export default function Plots() {
         </Link>
       </div>
 
+      {(loading || error || plotCategories.length === 0) && (
+        <div className="plots__status">
+          <GameDataStatus loading={loading} error={error} onRetry={retry} emptyMessage="No archive categories are available yet." />
+        </div>
+      )}
+
       <dialog
         ref={dialogRef}
         className="plots__overlay"
@@ -101,6 +111,7 @@ export default function Plots() {
               <section className={`plots__list-pane${entry ? " plots__list-pane--covered" : ""}`} inert={!!entry} aria-hidden={entry ? true : undefined}>
                 <h1 id="plots-list-title" className="plots__list-title">{category.title}</h1>
                 <div className="plots__list-scroll">
+                  {category.entries.length === 0 && <GameDataStatus emptyMessage="No entries unlocked in this category yet." />}
                   <ul className="plots__list">
                     {category.entries.map((item) => (
                       <li key={item.id}>

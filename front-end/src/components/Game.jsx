@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import chapter from "../content/story/ancient-gold-coin.json";
 import deskBackground from "../assets/game/desk-background.png";
 import folderBackground from "../assets/game/folder-background.png";
@@ -79,11 +79,23 @@ export default function Game() {
 
 function GamePage({ pageIndex, pageScenes }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [changingPage, setChangingPage] = useState(false);
   const [imageError, setImageError] = useState(false);
   const pendingPage = useRef(null);
   const dialogue = dialoguePages[pageIndex].content.join("\n\n");
   const scene = pageScenes[pageIndex];
+
+  function closeModal() {
+    if (location.state?.overlay) navigate(-1);
+    else navigate(`/game/${pageIndex + 1}`, { replace: true });
+  }
+
+  function openPopup() {
+    // A late scene-image response must not navigate away from a newly opened popup.
+    pendingPage.current = null;
+    setChangingPage(false);
+  }
 
   useEffect(() => () => { pendingPage.current = null; }, []);
 
@@ -143,13 +155,14 @@ function GamePage({ pageIndex, pageScenes }) {
           <Link className="game__tool" to="/starting" aria-label="Back to home">
             <img src={homeIcon} alt="" width="152" height="152" draggable={false} />
           </Link>
-          <button className="game__tool" type="button" aria-label="Inventory" disabled>
+          <Link className="game__tool" to="inventory" state={{ overlay: true }} onClick={openPopup} aria-label="Inventory" aria-haspopup="dialog">
             <img src={inventoryIcon} alt="" width="152" height="152" draggable={false} />
-          </button>
-          <button className="game__tool" type="button" aria-label="Settings" disabled>
+          </Link>
+          <Link className="game__tool" to="settings" state={{ overlay: true }} onClick={openPopup} aria-label="Settings" aria-haspopup="dialog">
             <img src={settingsIcon} alt="" width="152" height="152" draggable={false} />
-          </button>
+          </Link>
         </nav>
+        <Link className="game__hook" to="save-load" state={{ overlay: true }} onClick={openPopup} aria-label="Save and load" aria-haspopup="dialog" title="Save / Load" />
         <button
           className="game__page-button game__page-button--previous"
           type="button"
@@ -165,6 +178,7 @@ function GamePage({ pageIndex, pageScenes }) {
           onClick={() => changePage(1)}
         />
       </div>
+      <Outlet context={{ closeModal, page: pageIndex + 1, chapterTitle: chapter.title }} />
     </main>
   );
 }
