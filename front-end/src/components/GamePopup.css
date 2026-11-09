@@ -1,0 +1,39 @@
+.game-popup {
+  container-type: inline-size;
+  --popup-canvas-width: min(100vw, max(394px, calc(100svh * 1760 / 3808)));
+  box-sizing: border-box;
+  position: fixed;
+  inset: auto 0 auto;
+  top: max(12px, calc(50svh - var(--popup-canvas-width) * 3808 / 1760 * .42));
+  width: calc(var(--popup-canvas-width) * .9);
+  max-width: calc(100vw - 24px);
+  height: min(70svh, calc(var(--popup-canvas-width) * 1.11));
+  max-height: calc(100svh - 24px);
+  margin: 0 auto;
+  padding: 16px 20px 24px;
+  overflow: hidden;
+  border: 1px solid #c0b6a4;
+  border-radius: 3px;
+  background: rgb(44 32 29 / 86%);
+  color: #f6f0e6;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 18%);
+  font: 16px / 1.4 "Chakra Petch", sans-serif;
+}
+
+.game-popup[open] { display: flex; flex-direction: column; }
+.game-popup::backdrop { background: rgb(12 10 9 / 12%); }
+.game-popup__header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex: none; margin-bottom: 14px; }
+.game-popup__header h1 { flex: 1; margin: 0; font: 600 22px / 1.25 "Chakra Petch", sans-serif; }
+.game-popup__close { display: grid; place-items: center; flex: none; width: 44px; height: 44px; margin: -6px -10px -6px 0; border: 0; padding: 0; background: transparent; color: #f6f0e6; font: 30px / 1 Georgia, serif; cursor: pointer; }
+.game-popup__body { flex: 1; min-height: 0; overflow: auto; scrollbar-width: thin; scrollbar-color: #8c7b68 transparent; }
+.game-popup button, .game-popup input, .game-popup select { touch-action: manipulation; }
+.game-popup :focus-visible { outline: 2px solid #ade4df; outline-offset: 3px; }
+.game-popup .game-data-status { border-color: #8c7b68; background: rgb(28 23 21 / 65%); color: #f6f0e6; font-size: 14px; }
+
+@media (max-height: 520px) {
+  .game-popup { top: 12px; height: calc(100svh - 24px); }
+}
+
+@media (max-width: 350px) {
+  .game-popup { padding: 12px 14px 18px; width: calc(100vw - 24px); }
+}

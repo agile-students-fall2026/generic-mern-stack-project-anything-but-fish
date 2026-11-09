@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useGameData } from "../hooks/useGameData";
+import GameDataStatus from "./GameDataStatus";
 import background from "../assets/collections/background.png";
 import photoOne from "../assets/collections/photo-1.png";
 import photoTwo from "../assets/collections/photo-2.png";
@@ -8,46 +10,35 @@ import redThread from "../assets/collections/red-thread.png";
 import backIcon from "../assets/game/home-icon.png";
 import "./Collections.css";
 
-const collectionItems = [
-  {
-    id: "photo-1",
-    image: photoOne,
-    title: "Ancient gold coin",
-    description: "Desire drives two researchers to fight over a rare mineral. The mineral is cursed: the more people possess, the more they crave. Their conflict ends in a fatal stabbing.",
-  },
-  {
-    id: "photo-2",
-    image: photoTwo,
-    title: "White bench",
-    description: "A new friendship hides a terrible secret. A human-like monster disguises herself to gain a researcher's trust, only to kill him in the end.",
-  },
-  {
-    id: "photo-3",
-    image: photoThree,
-    title: "?",
-    description: "Two researchers create an artificial human together. One wants to build an army for power, but the other refuses. They fight and part ways.",
-  },
-];
+const photoArtwork = {
+  "photo-1": photoOne,
+  "photo-2": photoTwo,
+  "photo-3": photoThree,
+};
 
 export default function Collections() {
-  const [selectedItem, setSelectedItem] = useState(null);
+  const { data, loading, error, retry } = useGameData("collections");
+  const collectionItems = loading || error ? [] : (data?.items ?? []).filter((item) => Object.hasOwn(photoArtwork, item.id));
+  const [selectedId, setSelectedId] = useState(null);
+  const selectedItem = collectionItems.find((item) => item.id === selectedId);
   const dialogRef = useRef(null);
 
   useEffect(() => {
     const dialog = dialogRef.current;
     if (selectedItem && !dialog.open) dialog.showModal();
+    else if (!selectedItem && dialog.open) dialog.close();
   }, [selectedItem]);
 
   function closeDetails() {
     dialogRef.current.close();
-    setSelectedItem(null);
+    setSelectedId(null);
   }
 
   return (
     <main className="collections" aria-label="Collections">
       <div className="collections__canvas">
         <div className="collections__artwork" aria-hidden="true">
-          {[background, ...collectionItems.map((item) => item.image), redThread].map((image) => (
+          {[background, ...collectionItems.map((item) => photoArtwork[item.id]), redThread].map((image) => (
             <img
               key={image}
               className="collections__layer"
@@ -66,7 +57,7 @@ export default function Collections() {
             type="button"
             aria-label={`View ${item.title}`}
             aria-haspopup="dialog"
-            onClick={() => setSelectedItem(item)}
+            onClick={() => setSelectedId(item.id)}
           />
         ))}
         <Link className="collections__back" to="/starting" aria-label="Back to home">
@@ -74,12 +65,18 @@ export default function Collections() {
         </Link>
       </div>
 
+      {(loading || error || collectionItems.length === 0) && (
+        <div className="collections__status">
+          <GameDataStatus loading={loading} error={error} onRetry={retry} emptyMessage="No collections unlocked yet." />
+        </div>
+      )}
+
       <dialog
         ref={dialogRef}
         className="collections__overlay"
         aria-labelledby="collection-detail-title"
         aria-describedby="collection-detail-description"
-        onClose={() => setSelectedItem(null)}
+        onClose={() => setSelectedId(null)}
         onClick={(event) => {
           if (event.target === event.currentTarget) closeDetails();
         }}

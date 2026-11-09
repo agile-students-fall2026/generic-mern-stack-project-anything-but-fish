@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import environment from "../assets/chat/environment.png";
 import cislo from "../assets/chat/cislo.png";
 import documentBackground from "../assets/chat/document-background.png";
@@ -11,6 +11,13 @@ import "./CharacterChat.css";
 
 export default function CharacterChat() {
   const { name } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  function closeModal() {
+    if (location.state?.overlay) navigate(-1);
+    else navigate(`/chat/${encodeURIComponent(name)}`, { replace: true });
+  }
 
   return (
     <main className="character-chat" aria-label={`Chat with ${name}`}>
@@ -36,11 +43,12 @@ export default function CharacterChat() {
           <Link className="character-chat__tool" to="/chat" aria-label="Back to characters">
             <img src={backIcon} alt="" width="152" height="152" draggable={false} />
           </Link>
-          <Link className="character-chat__tool" to="/inventory" state={{ from: `/chat/${name}` }} aria-label="Inventory">
+          <Link className="character-chat__tool" to="inventory" state={{ overlay: true }} aria-label="Inventory" aria-haspopup="dialog">
             <img src={inventoryIcon} alt="" width="152" height="152" draggable={false} />
           </Link>
         </nav>
       </div>
+      <Outlet context={{ closeModal }} />
     </main>
   );
 }

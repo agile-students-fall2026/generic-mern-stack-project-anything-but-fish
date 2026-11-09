@@ -116,6 +116,15 @@
   outline-offset: 2px;
 }
 
+.plots__status {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: min(calc(100vw - 40px), 340px);
+  transform: translate(-50%, -50%);
+}
+
 /* On very short screens, let the artwork scroll so every plaque stays reachable. */
 @media (max-height: 500px) {
   .plots {

@@ -32,9 +32,11 @@ function App() {
           <Route path="/reset-confirmation" element={<ResetConfirmation />} />
           <Route path="/starting" element={<MainScreen />} />
           <Route path="/game" element={<Game />} />
-          <Route path="/game/:page" element={<Game />} />
-          <Route path="/game/:page/settings" element={<Settings />} />
-          <Route path="/game/:page/save-load" element={<SaveLoad />} />
+          <Route path="/game/:page" element={<Game />}>
+            <Route path="inventory" element={<Inventory />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="save-load" element={<SaveLoad mode="load" />} />
+          </Route>
           {/* Old game reader
           <Route path="/game-old" element={<GameOld />} />
           <Route path="/game-old/:page" element={<GameOld />} />
@@ -42,8 +44,10 @@ function App() {
           <Route path="/game-old/:page/save-load" element={<SaveLoad gamePath="/game-old" />} />
           */}
           <Route path="/chat" element={<ChooseCharacter />} />
-          <Route path="/chat/:name" element={<CharacterChat />} />
-          <Route path="/inventory" element={<Inventory />} />
+          <Route path="/chat/:name" element={<CharacterChat />}>
+            <Route path="inventory" element={<Inventory />} />
+          </Route>
+          <Route path="/inventory" element={<Navigate to="/game/1/inventory" replace />} />
           <Route path="/collections" element={<Collections />} />
           <Route path="/plots/chapters/text" element={<Navigate to="/plots/chapters/first-investigation" replace />} />
           <Route path="/plots/:category?/:entryId?" element={<Plots />} />
