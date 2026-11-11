@@ -188,3 +188,29 @@ Responsibilities:
 - **What did I do?** Completed the proposed frontend walkthrough, reconciled shared IDs and displayed counts, and reviewed mobile/desktop layout, navigation, and focus behavior.
 - **What will I do next?** By November 8, run the frontend production build, record any remaining demo issues, and hand off adapter mappings and API-integration checks for Sprint 2.
 - **Are there any blockers?** No blockers.
+
+## 2026-11-11
+
+### Celia Liang
+
+- **What did I do?** Reviewed the Game, Plots, and Game Settings handoff against the Sprint 2 goals and outlined the additional chapter's branches, item requirements, and discoverable character/object records.
+- **What will I do next?** Finalize the chapter design with two choice branches and an item-gated scene, define spoiler and unlock rules for Plots, and specify saved Settings fields. Share stable content IDs and NPC story boundaries with Jonas and Nigina.
+- **Are there any blockers?** No blockers.
+
+### Jonas Chen
+
+- **What did I do?** Reviewed the existing Auth/session design and the draft database models, AI conversation context, and game API contracts needed for Sprint 2.
+- **What will I do next?** Finalize authenticated API contracts and Mongoose schemas for progress, inventory, conversations, and archives. Design NPC memory summaries and spoiler-aware context, retry-safe item submission, and an optimization plan with index candidates and baseline query, latency, and AI-context measurements.
+- **Are there any blockers?** No blockers.
+
+### Anthony Wang
+
+- **What did I do?** Reviewed the Collection handoff and mapped collectible descriptions, discovery states, and completion counts to the planned archive and player-progress data.
+- **What will I do next?** Coordinate with Celia on at least three story-linked collectible records with images, descriptions, and discovery conditions. Define the Collection list/detail states and archive response fields, keeping Collection discovery records distinct from usable Inventory quantities and submission history.
+- **Are there any blockers?** No blockers.
+
+### Nigina Rashidova
+
+- **What did I do?** Reviewed the frontend mock-data adapters and identified the shared state changes needed when Auth, chat, Inventory, Collection, and Plots use backend responses.
+- **What will I do next?** Finalize frontend field mappings with Jonas and design loading, empty, retry, and expired-session states. Specify how item submission refreshes Inventory, Collection counts, and Plots unlocks together, and prepare mobile layout fixtures for long AI replies and expanded content.
+- **Are there any blockers?** No blockers.
