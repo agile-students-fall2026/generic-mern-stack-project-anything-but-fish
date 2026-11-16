@@ -214,3 +214,29 @@ Responsibilities:
 - **What did I do?** Reviewed the frontend mock-data adapters and identified the shared state changes needed when Auth, chat, Inventory, Collection, and Plots use backend responses.
 - **What will I do next?** Finalize frontend field mappings with Jonas and design loading, empty, retry, and expired-session states. Specify how item submission refreshes Inventory, Collection counts, and Plots unlocks together, and prepare mobile layout fixtures for long AI replies and expanded content.
 - **Are there any blockers?** No blockers.
+
+## 2026-11-15
+
+### Celia Liang
+
+- **What did I do?** I spent most of the discussion on the opening investigation: the order of scenes, what each character knows, and when a clue should become meaningful. We also talked about separating dialogue, narration, and artwork directions so revisions are easier to follow.
+- **What will I do next?** Rework the chapter outline into clearly grouped scenes, character notes, and clue descriptions. I want to review the revised pacing with the team and decide where conversations can reveal evidence or lead into a later scene, keeping undiscovered information out of the archive copy.
+- **Are there any blockers?** No blocker.
+
+### Jonas Chen
+
+- **What did I do?** Main takeaway: we need clearer file categories before adding more content. I proposed grouping page files, reusable UI, story content, and artwork consistently, and discussed how the NPC reference material should stay aligned with Celia's story notes.
+- **What will I do next?** Draft a folder and naming plan for the team to review before moving files. For the content side, outline where character instructions, shared lore, and conversation outcomes belong, then discuss which outcomes should affect evidence and story progression.
+- **Are there any blockers?** No blocker.
+
+### Anthony Wang
+
+- **What did I do?** Looked at the story through the collectible items. For example, finding an object, using it in a scene, and reading about it in Collection should feel like parts of the same discovery. Discussed how to organize item images and descriptions and keep their names consistent across Collection, Inventory, and Plots.
+- **What will I do next?** Put together an item-content checklist: image, short description, story connection, discovery condition, and what the player can read before or after finding it. Use that checklist to regroup the Collection content and review the wording with Celia.
+- **Are there any blockers?** No blocker.
+
+### Nigina Rashidova
+
+- **What did I do?** Walked through the screens from a new player's perspective and brought navigation clarity into the design discussion. We considered labels, a short introduction, subtle hover feedback, and optional hints, including how those cues could fit the investigation artwork. I also noted the need to distinguish shared visual assets from files used by a single screen.
+- **What will I do next?** Sketch the navigation and hint treatments, then compare them with the revised story flow. Coordinate with Jonas on the file grouping and with Celia and Anthony on where dialogue, evidence, and archive updates should appear in the interface.
+- **Are there any blockers?** No blocker.
