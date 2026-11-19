@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json()); 
 
 
-app.use("/api/collections", collectionsRouter);
+app.use("/api/game/collections", collectionsRouter);
 app.get("/api/collections", (req, res) => {
   res.json({
     items: [
