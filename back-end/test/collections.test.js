@@ -1,7 +1,7 @@
-import { expect } from "chai";
-import request from "supertest";
-import app from "../app.js";
-import { collectionItems } from "../data/collections.js";
+const { expect } = require("chai");
+const request = require("supertest");
+const app = require("../src/app");
+const { collectionItems } = require("../src/data/collections");
 
 describe("GET /api/game/collections", () => {
   it("responds with status 200 and JSON", async () => {

@@ -1,4 +1,4 @@
-export const collectionItems = [
+const collectionItems = [
   {
     id: "photo-1",
     title: "Ancient gold coin",
@@ -17,4 +17,6 @@ export const collectionItems = [
     description:
       "Two researchers create an artificial human together. One wants to build an army for power, but the other refuses. They fight and part ways.",
   },
+
 ];
+module.exports = { collectionItems };

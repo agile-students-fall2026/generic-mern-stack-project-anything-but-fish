@@ -1,5 +1,7 @@
-import { Router } from "express";
-import { collectionItems } from "../data/collections.js";
+"use strict";
+
+const { Router } = require("express");
+const { collectionItems } = require("../data/collections");
 
 const router = Router();
 
@@ -8,4 +10,4 @@ router.get("/", (req, res) => {
   res.json({ items: collectionItems });
 });
 
-export default router;
+module.exports = router;
