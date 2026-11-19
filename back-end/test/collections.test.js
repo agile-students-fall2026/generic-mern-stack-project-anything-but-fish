@@ -33,4 +33,11 @@ describe("GET /api/game/collections", () => {
 
     expect(res.status).to.equal(404);
   });
+
+  it("returns 404 with a JSON detail message for an unknown route", async () => {
+  const res = await request(app).get("/api/game/not-a-real-page");
+
+  expect(res.status).to.equal(404);
+  expect(res.body).to.have.property("detail", "Not found");
+});
 });
