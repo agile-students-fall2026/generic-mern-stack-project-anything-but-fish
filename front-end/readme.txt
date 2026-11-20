@@ -58,33 +58,26 @@ Never place MongoDB credentials or other secrets in VITE_* variables.
 The backend is not implemented yet. Auth requests will show an error until the
 backend endpoints documented in ../back-end/readme.txt are available. Account
 creation and reset confirmation are reached after successful API responses.
-The story reader at /game loads src/content/story/ancient-gold-coin.json.
-The draft contains 19 pages: 14 dialogue pages and 5 archive pages.
-See src/content/story/README.md for the JSON format, block types, and artwork paths.
-The current game uses /game/1 through /game/14, numbered from the first dialogue.
+The story reader at /game loads src/content/story/ancient-gold-coin.js.
+The chapter has 21 ordered entries with backgrounds, spoken lines, narration,
+and archive text. See src/content/story/README.md for the entry format.
 /game and invalid page numbers redirect to /game/1. Refresh and browser Back/Forward
-follow the page in the URL; saving progress is not implemented yet.
+follow the entry number in the URL.
 Game.jsx assembles the supplied story artwork with
 13 original PNG layers in src/assets/game, each at 1760 x 3808.
-It reads only chapter pages with a speaker and displays their dialogue without
-speaker names or scene descriptions. The radio's upper-left and lower-left
-buttons move to the previous/next dialogue, stopping at the chapter boundaries.
+Spoken lines include the speaker in the dialogue string. Click the bottom radio
+panel to advance or its upper-left control to go back one entry.
 Dialogue uses locally hosted Chakra Petch SemiBold from Google Fonts
 (https://github.com/google/fonts/tree/main/ofl/chakrapetch), with the OFL license
 in src/assets/fonts/chakra-petch. Design text is 63px with an 81px line height,
 color #646064, and a 46% #A0AA9C shadow; all metrics scale with the canvas.
 Four placeholder images are copied unchanged into src/assets/game/scenes.
-Each dialogue is assigned a random image once per visit. The original illustration's
-alpha channel masks the image; SVG slice fills the area without distortion,
-using visible artwork bounds to exclude the legacy image's transparent padding.
-Page changes wait for the next image to decode, then update the dialogue and
-replace the whole SVG together so old pixels never use the next image's crop.
-Navigation is disabled during loading; failed loads retain the current page and
-allow retrying.
-Game.css uses the same CSS-only sizing as Register: a 394px base width,
-expansion for taller screens, black sidebars, and centered cropping on short screens.
-The upper-left home icon returns to /starting; inventory and settings icons
-are currently placeholders. The former /story-preview route has been removed.
+The entries specify which placeholder to display. The original illustration's
+alpha channel masks the image, and SVG slice fills the area without distortion.
+Game.css fits the full canvas to the available viewport at its original
+aspect ratio, centering it against a black background.
+The upper-left home icon returns to /starting. Inventory and Settings open
+overlays, and the cyan hook opens Save / Load.
 The original 19-page reader is retained in GameOld.jsx and GameOld.css, with its
 dialogue/archive components and chapter data unchanged. To view it again, uncomment
 the GameOld import and /game-old routes in App.jsx. It retains ID-based page URLs
