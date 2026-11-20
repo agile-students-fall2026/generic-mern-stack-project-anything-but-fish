@@ -138,3 +138,133 @@
   outline: 2px solid #a6eeee;
   outline-offset: 2px;
 }
+
+.character-chat__panel {
+  position: absolute;
+  top: max(19%, calc((100% - 100svh) / 2 + 98px));
+  bottom: max(39%, calc((100% - 100svh) / 2 + 330px));
+  left: 10%;
+  width: 80%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  overflow: hidden;
+  border: 1px solid #665747;
+  border-radius: 10px;
+  background: rgb(246 235 212 / 94%);
+  color: #29231d;
+  font-family: "Chakra Petch", sans-serif;
+}
+
+.character-chat__name {
+  margin: 0;
+  overflow: hidden;
+  font-size: clamp(18px, 5cqw, 24px);
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.character-chat__modes {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.character-chat__mode {
+  padding: 5px 12px;
+  border: 1px solid #665747;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.character-chat__mode[aria-pressed="true"] {
+  background: #42382e;
+  color: #fff;
+}
+
+.character-chat__mode:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.character-chat__conversation {
+  min-height: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  font-size: clamp(12px, 3.4cqw, 16px);
+}
+
+.character-chat__message {
+  max-width: 85%;
+  padding: 7px 9px;
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+  background: #fff9ed;
+}
+
+.character-chat__message--user {
+  align-self: flex-end;
+  background: #d9e6df;
+}
+
+.character-chat__message--assistant {
+  align-self: flex-start;
+}
+
+.character-chat__speaker {
+  font-weight: 700;
+}
+
+.character-chat__message p {
+  margin: 4px 0 0;
+  white-space: pre-wrap;
+}
+
+.character-chat__status,
+.character-chat__error {
+  margin: 0;
+  font-size: clamp(12px, 3.4cqw, 16px);
+}
+
+.character-chat__error {
+  color: #842b23;
+}
+
+.character-chat__input {
+  height: calc(440 / 801 * 100%);
+}
+
+.character-chat__send {
+  position: absolute;
+  left: calc(570 / 1397 * 100%);
+  top: calc(620 / 801 * 100%);
+  width: calc(380 / 1397 * 100%);
+  min-height: 30px;
+  border: 1px solid #42382e;
+  border-radius: 6px;
+  background: #42382e;
+  color: #fff;
+  font-family: "Chakra Petch", sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.character-chat__send:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.character-chat__mode:focus-visible,
+.character-chat__send:focus-visible {
+  outline: 2px solid #166b76;
+  outline-offset: 2px;
+}

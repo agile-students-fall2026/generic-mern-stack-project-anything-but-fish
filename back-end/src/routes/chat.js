@@ -1,5 +1,6 @@
 "use strict";
 
+const { randomBytes } = require("node:crypto");
 const express = require("express");
 const {
   getCharacterProfile,
@@ -11,27 +12,50 @@ const router = express.Router();
 const conversations = new Map();
 const pending = new Set();
 
+const GUEST_COOKIE = "abf_chat_guest";
+const GUEST_COOKIE_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 const MAX_CONVERSATIONS = 500;
 const MAX_MESSAGES = 12;
 const HISTORY_TTL_MS = 60 * 60 * 1000;
 
 router.use(express.json({ limit: "8kb" }));
 
-function getPlayerId(req, res) {
-  const id = req.user?.id ?? res.locals.user?.id ?? req.session?.userId;
-  return id === undefined || id === null || id === ""
-    ? null
-    : String(id);
+function readGuestId(req) {
+  const cookie = (req.headers.cookie || "")
+    .split(";")
+    .map((part) => part.trim())
+    .find((part) => part.startsWith(`${GUEST_COOKIE}=`));
+
+  const id = cookie?.slice(GUEST_COOKIE.length + 1);
+  return /^[a-f0-9]{64}$/.test(id || "") ? id : null;
 }
 
-function requirePlayer(req, res, next) {
-  const playerId = getPlayerId(req, res);
+function identifyPlayer(req, res, next) {
+  const accountId =
+    req.user?.id ?? res.locals.user?.id ?? req.session?.userId;
 
-  if (!playerId) {
-    return res.status(401).json({ detail: "Please sign in to chat." });
+  if (accountId !== undefined && accountId !== null && accountId !== "") {
+    res.locals.chatPlayerId = `user:${accountId}`;
+    return next();
   }
 
-  res.locals.chatPlayerId = playerId;
+  let guestId = readGuestId(req);
+
+  if (!guestId) {
+    guestId = randomBytes(32).toString("hex");
+
+    res.cookie(GUEST_COOKIE, guestId, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure:
+        process.env.NODE_ENV === "production" ||
+        process.env.AUTH_COOKIE_SECURE === "true",
+      path: "/api/game/chat",
+      maxAge: GUEST_COOKIE_AGE_MS,
+    });
+  }
+
+  res.locals.chatPlayerId = `guest:${guestId}`;
   next();
 }
 
@@ -84,7 +108,7 @@ function saveHistory(key, messages) {
   });
 }
 
-router.get("/:characterId", requirePlayer, validateSelection, (req, res) => {
+router.get("/:characterId", identifyPlayer, validateSelection, (req, res) => {
   const messages = readHistory(conversationKey(req, res)).map(
     ({ role, content }) => ({ role, content })
   );
@@ -94,7 +118,7 @@ router.get("/:characterId", requirePlayer, validateSelection, (req, res) => {
 
 router.post(
   "/:characterId",
-  requirePlayer,
+  identifyPlayer,
   validateSelection,
   async (req, res) => {
     const key = conversationKey(req, res);

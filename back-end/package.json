@@ -2,14 +2,15 @@
   "name": "back-end",
   "version": "1.0.0",
   "scripts": {
-  "start": "node src/server.js",
-  "dev": "node --watch src/server.js",
-  "test": "mocha",
-  "coverage": "c8 mocha"
-},
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "mocha",
+    "coverage": "c8 mocha"
+  },
   "dependencies": {
     "dotenv": "^18.0.10",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "openai": "^7.60.0"
   },
   "devDependencies": {
     "c8": "^12.0.0",
