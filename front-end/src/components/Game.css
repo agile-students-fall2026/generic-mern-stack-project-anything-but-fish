@@ -1,10 +1,8 @@
 .game {
-  --game-base-width: 394px;
-
   position: fixed;
   inset: 0;
   height: 100vh;
-  height: 100svh;
+  height: 100dvh;
   overflow: clip;
   background: #000;
 }
@@ -14,9 +12,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  /* Use the same screen fitting rule as Register, with this artwork's ratio. */
-  width: min(100%, max(var(--game-base-width), calc(100vh * 1760 / 3808)));
-  width: min(100%, max(var(--game-base-width), calc(100svh * 1760 / 3808)));
+  width: min(100%, calc(100vh * 1760 / 3808));
+  width: min(100%, calc(100dvh * 1760 / 3808));
   aspect-ratio: 1760 / 3808;
   transform: translate(-50%, -50%);
 }
@@ -34,7 +31,7 @@
 .game__tools {
   position: absolute;
   left: calc(104 / 1760 * 100%);
-  top: max(calc(236 / 3808 * 100%), calc((100% - 100svh) / 2 + 12px));
+  top: calc(236 / 3808 * 100%);
   width: calc(152 / 1760 * 100%);
   display: flex;
   flex-direction: column;
@@ -85,6 +82,28 @@
 
 .game__hook:focus-visible { outline: 2px solid #a6eeee; outline-offset: 2px; }
 
+.game__hook-highlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  filter: drop-shadow(0 0 0.65cqw #7aeee8);
+}
+
+.game__hook-highlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #affff8;
+  mask: url("../assets/game/fishing-hook.png") center / 100% 100% no-repeat;
+  /* Keep the glow on the metal hook where it meets the fishing line. */
+  clip-path: inset(68.7% 25% 23% 42%);
+}
+
+.game__hook:is(:hover, :focus-visible, :active) + .game__hook-highlight {
+  opacity: 0.95;
+}
+
 .game__scene-mask {
   position: absolute;
   inset: 0;
@@ -120,6 +139,7 @@
   letter-spacing: 0.01em;
   white-space: pre-line;
   transform: translateY(-50%);
+  pointer-events: none;
 }
 
 .game__dialogue-text {
@@ -138,21 +158,8 @@
   user-select: none;
 }
 
-.game__image-error {
-  position: absolute;
-  left: calc(315 / 1760 * 100%);
-  top: calc(3610 / 3808 * 100%);
-  width: calc(1050 / 1760 * 100%);
-  margin: 0;
-  color: #646064;
-  font: 600 2cqw / 1.2 "Chakra Petch", sans-serif;
-}
-
 .game__page-button {
   position: absolute;
-  left: calc(70 / 1760 * 100%);
-  width: calc(105 / 1760 * 100%);
-  height: calc(190 / 3808 * 100%);
   padding: 0;
   border: 0;
   border-radius: 2px;
@@ -162,18 +169,49 @@
 }
 
 .game__page-button--previous {
+  --arrow-left: calc(8 / 1760 * 100cqw);
+  --arrow-top: calc(24 / 1760 * 100cqw);
+
+  z-index: 1;
+  left: calc(70 / 1760 * 100%);
   top: calc(3150 / 3808 * 100%);
+  width: calc(105 / 1760 * 100%);
+  height: calc(190 / 3808 * 100%);
 }
 
 .game__page-button--next {
-  top: calc(3530 / 3808 * 100%);
+  --arrow-left: calc(78 / 1760 * 100cqw);
+  --arrow-top: calc(599 / 1760 * 100cqw);
+
+  inset: calc(2959 / 3808 * 100%) 0 0;
+}
+
+.game__page-button::after {
+  content: "";
+  position: absolute;
+  left: var(--arrow-left);
+  top: var(--arrow-top);
+  width: calc(94 / 1760 * 100cqw);
+  height: calc(104 / 1760 * 100cqw);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #a6eeee 0%, transparent 72%);
+  opacity: 0.48;
+  pointer-events: none;
+}
+
+.game__page-button:enabled:is(:hover, :focus-visible, :active)::after {
+  opacity: 0.82;
 }
 
 .game__page-button:focus-visible {
   outline: 2px solid #a6eeee;
-  outline-offset: 2px;
+  outline-offset: -2px;
 }
 
 .game__page-button:disabled {
   cursor: default;
+}
+
+.game__page-button:disabled::after {
+  opacity: 0;
 }
