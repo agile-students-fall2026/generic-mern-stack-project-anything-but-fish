@@ -1,4 +1,7 @@
+import { memo, useCallback, useState } from "react";
 import { Link, Navigate, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import StoryScene from "./StoryScene.jsx";
+import usePreloadedImages from "../hooks/usePreloadedImages.js";
 import storyEntries, { chapterTitle } from "../content/story/ancient-gold-coin.js";
 import deskBackground from "../assets/game/desk-background.png";
 import folderBackground from "../assets/game/folder-background.png";
@@ -17,6 +20,7 @@ import paperclip from "../assets/game/paperclip.png";
 import homeIcon from "../assets/game/home-icon.png";
 import inventoryIcon from "../assets/game/inventory-icon.png";
 import settingsIcon from "../assets/game/settings-icon.png";
+import storyMask from "../assets/game/story-illustration.png";
 import "./Game.css";
 
 // Back to front, matching the supplied layer stack. Every PNG retains its canvas.
@@ -38,7 +42,36 @@ const speakerPortraits = {
   ona: onaPortrait,
 };
 
-function ArtworkLayer({ src, className = "" }) {
+const gameImages = [...new Set([
+  ...storyEntries.map(({ background }) => background.src),
+  ...backgroundLayers,
+  ...foregroundLayers,
+  ...Object.values(speakerPortraits),
+  clipboardClip, fishingHook, paperclip, portrait, radio,
+  homeIcon, inventoryIcon, settingsIcon, storyMask,
+])];
+
+function StoryLoading({ completed, error, retry }) {
+  return (
+    <div className="game__loading">
+      {error ? (
+        <>
+          <p role="alert">The story images couldn’t load.</p>
+          <button type="button" onClick={retry}>Try again</button>
+        </>
+      ) : (
+        <div role="status">
+          <p>Preparing your story…</p>
+          <progress aria-label="Story images loaded" value={completed} max={gameImages.length} />
+          <p className="game__loading-count">{completed} / {gameImages.length}</p>
+        </div>
+      )}
+      <Link to="/starting">Back to home</Link>
+    </div>
+  );
+}
+
+const ArtworkLayer = memo(function ArtworkLayer({ src, className = "" }) {
   return (
     <img
       className={`game__layer ${className}`}
@@ -49,18 +82,28 @@ function ArtworkLayer({ src, className = "" }) {
       draggable={false}
     />
   );
-}
+});
 
 export default function Game() {
   const { page } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const preload = usePreloadedImages(gameImages);
+  const [sceneReady, setSceneReady] = useState(false);
+  const [sceneError, setSceneError] = useState(false);
+  const [sceneAttempt, setSceneAttempt] = useState(0);
+  const handleSceneReady = useCallback(() => {
+    setSceneReady(true);
+    setSceneError(false);
+  }, []);
+  const handleSceneError = useCallback(() => setSceneError(true), []);
   const pageNumber = Number(page);
   if (!/^[1-9]\d*$/.test(page ?? "") || pageNumber > storyEntries.length) {
     return <Navigate to="/game/1" replace />;
   }
 
-  const { background, dialogue, speaker } = storyEntries[pageNumber - 1];
+  const { background, camera, dialogue, speaker } = storyEntries[pageNumber - 1];
+  const dialogueText = dialogue?.trim() ? dialogue : "...";
   const speakerPortrait = Object.hasOwn(speakerPortraits, speaker) ? speakerPortraits[speaker] : null;
 
   function closeModal() {
@@ -68,20 +111,34 @@ export default function Game() {
     else navigate(`/game/${pageNumber}`, { replace: true });
   }
 
+  function retryScene() {
+    setSceneError(false);
+    setSceneAttempt((value) => value + 1);
+  }
+
+  if (!preload.ready) {
+    return (
+      <main className="game" aria-label="Story" aria-busy={!preload.error}>
+        <StoryLoading {...preload} />
+      </main>
+    );
+  }
+
   return (
-    <main className="game" aria-label="Story">
-      <div className="game__canvas">
+    <main className="game" aria-label="Story" aria-busy={!sceneReady}>
+      {(!sceneReady || sceneError) && (
+        <StoryLoading {...preload} error={sceneError} retry={retryScene} />
+      )}
+      <div className="game__canvas" inert={!sceneReady || sceneError} aria-hidden={!sceneReady || sceneError}>
         {backgroundLayers.map((src) => <ArtworkLayer key={src} src={src} />)}
         <div className="game__scene-mask" aria-hidden="true">
-          <svg
-            key={background.src}
-            className="game__scene"
-            viewBox={background.viewBox}
-            preserveAspectRatio="xMidYMid slice"
-            focusable="false"
-          >
-            <image href={background.src} width={background.width} height={background.height} />
-          </svg>
+          <StoryScene
+            background={background}
+            camera={camera}
+            onReady={handleSceneReady}
+            onError={handleSceneError}
+            attempt={sceneAttempt}
+          />
         </div>
         <div className="game__top-art" aria-hidden="true">
           <ArtworkLayer src={clipboardClip} />
@@ -102,8 +159,8 @@ export default function Game() {
           ) : <ArtworkLayer src={portrait} />}
           <ArtworkLayer src={radio} />
           <p className="game__dialogue" aria-live="polite" aria-atomic="true">
-            <span className="game__dialogue-shadow" aria-hidden="true">{dialogue}</span>
-            <span className="game__dialogue-text">{dialogue}</span>
+            <span className="game__dialogue-shadow" aria-hidden="true">{dialogueText}</span>
+            <span className="game__dialogue-text">{dialogueText}</span>
           </p>
           <ArtworkLayer src={fishingHook} className="game__line-bottom" />
           <Link className="game__hook" to="save-load" state={{ overlay: true }} aria-label="Save and load" aria-haspopup="dialog" title="Save / Load" />
