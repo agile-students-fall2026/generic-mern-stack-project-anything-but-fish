@@ -34,6 +34,69 @@
   display: block;
 }
 
+.character-chat__portrait-crop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* Match Cislo's lower edge and keep full-length portraits behind the paper. */
+  height: calc(2542 / 3249 * 100%);
+  overflow: hidden;
+}
+
+.character-chat__portrait {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.character-chat__portrait--ona {
+  top: calc(640 / 1500 * 100cqw);
+}
+
+.character-chat__portrait--ivan {
+  top: calc(470 / 1500 * 100cqw);
+}
+
+.character-chat__portrait-button {
+  position: absolute;
+  left: 0;
+  top: calc(450 / 3249 * 100%);
+  width: 100%;
+  height: calc(2092 / 3249 * 100%);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.character-chat__portrait-button--ona {
+  top: calc(640 / 3249 * 100%);
+  height: calc(1902 / 3249 * 100%);
+}
+
+.character-chat__portrait-button--ivan {
+  top: calc(470 / 3249 * 100%);
+  height: calc(2072 / 3249 * 100%);
+}
+
+.character-chat__open-conversation {
+  position: absolute;
+  top: max(19%, calc((100% - 100svh) / 2 + 98px));
+  right: 10%;
+  padding: 8px 12px;
+  border: 1px solid #665747;
+  border-radius: 6px;
+  background: #f6ebd4;
+  color: #29231d;
+  font-family: "Chakra Petch", sans-serif;
+  cursor: pointer;
+}
+
 .character-chat__composer {
   position: absolute;
   left: calc(56 / 1500 * 100%);
@@ -158,8 +221,37 @@
   font-family: "Chakra Petch", sans-serif;
 }
 
+.character-chat__panel[hidden] {
+  display: none;
+}
+
+.character-chat__close {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.character-chat__close:hover {
+  background: rgb(66 56 46 / 10%);
+}
+
 .character-chat__name {
   margin: 0;
+  padding-inline: 24px;
   overflow: hidden;
   font-size: clamp(18px, 5cqw, 24px);
   text-align: center;
@@ -264,7 +356,10 @@
 }
 
 .character-chat__mode:focus-visible,
-.character-chat__send:focus-visible {
+.character-chat__send:focus-visible,
+.character-chat__close:focus-visible,
+.character-chat__open-conversation:focus-visible,
+.character-chat__portrait-button:focus-visible {
   outline: 2px solid #166b76;
   outline-offset: 2px;
 }

@@ -9,6 +9,8 @@ import note from "../assets/game/note.png";
 import pen from "../assets/game/pen.png";
 import badge from "../assets/game/badge.png";
 import portrait from "../assets/game/portrait.png";
+import ivanPortrait from "../assets/game/ivan-portrait.png";
+import onaPortrait from "../assets/game/ona-portrait.png";
 import radio from "../assets/game/radio.png";
 import fishingHook from "../assets/game/fishing-hook.png";
 import paperclip from "../assets/game/paperclip.png";
@@ -29,9 +31,12 @@ const foregroundLayers = [
   note,
   pen,
   badge,
-  portrait,
-  radio,
 ];
+
+const speakerPortraits = {
+  ivan: ivanPortrait,
+  ona: onaPortrait,
+};
 
 function ArtworkLayer({ src, className = "" }) {
   return (
@@ -55,7 +60,8 @@ export default function Game() {
     return <Navigate to="/game/1" replace />;
   }
 
-  const { background, dialogue } = storyEntries[pageNumber - 1];
+  const { background, dialogue, speaker } = storyEntries[pageNumber - 1];
+  const speakerPortrait = Object.hasOwn(speakerPortraits, speaker) ? speakerPortraits[speaker] : null;
 
   function closeModal() {
     if (location.state?.overlay) navigate(-1);
@@ -84,6 +90,17 @@ export default function Game() {
         </div>
         <div className="game__bottom-art">
           {foregroundLayers.map((src) => <ArtworkLayer key={src} src={src} />)}
+          {speakerPortrait ? (
+            <img
+              className="game__portrait"
+              src={speakerPortrait}
+              alt=""
+              width="561"
+              height="517"
+              draggable={false}
+            />
+          ) : <ArtworkLayer src={portrait} />}
+          <ArtworkLayer src={radio} />
           <p className="game__dialogue" aria-live="polite" aria-atomic="true">
             <span className="game__dialogue-shadow" aria-hidden="true">{dialogue}</span>
             <span className="game__dialogue-text">{dialogue}</span>
