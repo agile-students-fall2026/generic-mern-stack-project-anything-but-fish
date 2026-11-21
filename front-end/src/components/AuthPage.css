@@ -169,12 +169,26 @@
   opacity: 1;
 }
 
-.auth-page__feedback {
+.auth-page__messages {
   position: absolute;
-  bottom: calc(max(8px, env(safe-area-inset-bottom)) + 40px);
-  left: 50%;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  left: max(16px, env(safe-area-inset-left));
+  right: max(16px, env(safe-area-inset-right));
+  z-index: 1;
+  display: grid;
+  gap: 8px;
+  width: min(
+    28rem,
+    calc(max(var(--auth-page-base-width), 100svh * 1500 / 3249) - 32px)
+  );
+  max-width: calc(100% - 32px);
+  margin-inline: auto;
+}
+
+.auth-page__feedback {
   box-sizing: border-box;
-  width: min(calc(100% - 2rem), 28rem);
+  min-width: 0;
+  width: 100%;
   margin: 0;
   padding: 0.75rem 1rem;
   border: 1px solid #7d171b;
@@ -185,34 +199,42 @@
     monospace;
   overflow-wrap: anywhere;
   text-align: center;
-  transform: translateX(-50%);
 }
 
 .auth-page__footer {
-  position: absolute;
-  bottom: max(8px, env(safe-area-inset-bottom));
-  left: 50%;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
   gap: 4px 18px;
-  width: min(calc(100% - 24px), 28rem);
+  min-width: 0;
+  width: 100%;
+  text-align: center;
   font:
     600 12px / 1.5 "Chakra Petch",
     sans-serif;
-  /* Match the guest link's 50/1760 canvas ratio and 12px minimum. */
-  font-size: max(
+  /* Scale with the artwork, with a readable size that still fits narrow screens. */
+  font-size: clamp(
     12px,
     calc(
       min(100vw, max(var(--auth-page-base-width), 100svh * 1500 / 3249)) * 50 /
         1760
-    )
+    ),
+    16px
   );
-  transform: translateX(-50%);
+}
+
+.auth-page__account-prompt {
+  flex-basis: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .auth-page__footer a {
+  min-width: 0;
+  max-width: 100%;
   color: #000;
+  overflow-wrap: anywhere;
   text-underline-offset: 0.2em;
 }
 

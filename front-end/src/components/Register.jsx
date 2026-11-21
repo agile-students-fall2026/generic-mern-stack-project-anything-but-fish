@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { authRequest } from "../lib/auth-api";
 import AuthPage from "./AuthPage";
 
@@ -10,15 +10,16 @@ const fields = [
 ];
 
 export default function Register() {
-  const navigate = useNavigate();
   const request = useRef(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [created, setCreated] = useState(false);
 
   useEffect(() => () => request.current?.abort(), []);
 
   function clearFeedback(event) {
     setError("");
+    setCreated(false);
     if (["password", "confirmation"].includes(event.target.name)) {
       event.currentTarget.elements.namedItem("confirmation").setCustomValidity("");
     }
@@ -31,6 +32,7 @@ export default function Register() {
     const form = event.currentTarget;
     const fields = new FormData(form);
     setError("");
+    setCreated(false);
     if (fields.get("password") !== fields.get("confirmation")) {
       const confirmation = form.elements.namedItem("confirmation");
       confirmation.setCustomValidity("Passwords do not match.");
@@ -46,7 +48,10 @@ export default function Register() {
         body: { email: fields.get("email").trim(), password: fields.get("password") },
         signal: controller.signal,
       });
-      if (!controller.signal.aborted) navigate("/account-created", { replace: true });
+      if (!controller.signal.aborted) {
+        form.reset();
+        setCreated(true);
+      }
     } catch (error) {
       if (!controller.signal.aborted) setError(error.message);
     } finally {
@@ -64,10 +69,13 @@ export default function Register() {
       onInput={clearFeedback}
       busy={busy}
       error={error}
+      status={created ? "Account created. Log in to continue." : ""}
       buttonLabel="Create Account"
       busyLabel="Creating account…"
       footer={<>
-        <Link to="/login">Login</Link>
+        <span className="auth-page__account-prompt">
+          Already have an account? <Link to="/login">Login</Link>
+        </span>
         <Link to="/password-recovery">Forgot password?</Link>
         <Link to="/">Home</Link>
       </>}

@@ -19,6 +19,7 @@ const fields = [
     label: "Password",
     type: "password",
     autoComplete: "current-password",
+    maxLength: 128,
     required: true,
   },
 ];

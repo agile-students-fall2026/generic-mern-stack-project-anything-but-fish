@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { authRequest } from "../lib/auth-api";
+import { useAuth } from "../auth/AuthContext";
 import AuthPage from "./AuthPage";
 
 const fields = [
@@ -26,6 +27,7 @@ const fields = [
 ];
 
 export default function ResetPassword() {
+  const { clearSession } = useAuth();
   const [params] = useSearchParams();
   const token = params.get("token");
   const navigate = useNavigate();
@@ -39,6 +41,7 @@ export default function ResetPassword() {
     setBusy(true); setError("");
     try {
       await authRequest("/reset-password", { body: { token, password: form.get("password") } });
+      clearSession();
       navigate("/reset-confirmation", { replace: true });
     } catch (error) { setError(error.message); }
     finally { setBusy(false); }

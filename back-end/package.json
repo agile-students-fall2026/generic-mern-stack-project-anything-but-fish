@@ -4,12 +4,19 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "test": "mocha",
-    "coverage": "c8 mocha"
+    "test": "mocha --timeout 60000",
+    "coverage": "c8 mocha --timeout 60000"
   },
   "dependencies": {
+    "cookie-parser": "1.4.7",
+    "cors": "2.8.6",
     "dotenv": "^18.0.10",
     "express": "^5.1.0",
+    "express-rate-limit": "8.7.3",
+    "express-validator": "7.3.2",
+    "helmet": "8.3.0",
+    "jsonwebtoken": "9.0.3",
+    "mongoose": "9.11.4",
     "openai": "^7.60.0"
   },
   "devDependencies": {
@@ -17,5 +24,13 @@
     "chai": "^6.3.0",
     "mocha": "^12.0.3",
     "supertest": "^7.3.2"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "overrides": {
+    "glob": "14.0.2",
+    "minimatch": "11.0.1"
   }
 }

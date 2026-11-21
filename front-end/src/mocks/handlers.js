@@ -1,6 +1,6 @@
 import { http, HttpResponse } from "msw/http";
 import { delay } from "msw/utils/delay";
-import { plotCatalog, collectionCatalog, characterCatalog } from "./fixtures/catalog.js";
+import { plotCatalog, characterCatalog } from "./fixtures/catalog.js";
 import { previewProfiles } from "./fixtures/profiles.js";
 import { inventoryPreview } from "./fixtures/inventory.js";
 import { settingsPreview } from "./fixtures/settings.js";
@@ -49,12 +49,9 @@ export function createGameHandlers({ baseUrl = "/api", scenario = "demo", delayM
     return data instanceof Response ? data : HttpResponse.json(data, { headers });
   };
 
-  // Only these game routes are mocked. Authentication and all other traffic pass through.
+  // Only unfinished game endpoints are mocked. Auth, chat, and collections use the server.
   return [
     http.get(`${apiBase}/game/plots`, respond(() => ({ categories: plotsFor(currentProfile) }))),
-    http.get(`${apiBase}/game/collections`, respond(() => ({
-      items: collectionCatalog.filter((item) => currentProfile.unlockedCollectionIds.includes(item.id)),
-    }))),
     http.get(`${apiBase}/game/characters`, respond(() => ({
       characters: characterCatalog.filter((character) => currentProfile.unlockedCharacterIds.includes(character.name)),
     }))),

@@ -29,18 +29,12 @@ export const previewProfiles = {
         "laboratory-notebook": 2
       }
     },
-    "unlockedCollectionIds": [
-      "photo-1",
-      "photo-2",
-      "photo-3"
-    ],
     "unlockedCharacterIds": [
       "cislo"
     ]
   },
   "empty": {
     "plotProgress": {},
-    "unlockedCollectionIds": [],
     "unlockedCharacterIds": []
   }
 };
