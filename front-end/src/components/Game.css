@@ -43,6 +43,18 @@
 .game__top-art { top: 0; }
 .game__bottom-art { bottom: 0; }
 
+/* New portraits fill the original photo's bounds on the 1760 × 3808 canvas. */
+.game__portrait {
+  position: absolute;
+  left: calc(4 / 1760 * 100%);
+  top: calc(2491 / 3808 * 100%);
+  display: block;
+  width: calc(561 / 1760 * 100%);
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
 /* The original fishing line has an empty middle, so neither piece is stretched. */
 .game__line-top { clip-path: inset(0 0 50% 0); }
 .game__line-bottom { clip-path: inset(50% 0 0 0); }

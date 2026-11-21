@@ -13,6 +13,8 @@ import {
 } from "../lib/chat-api";
 import environment from "../assets/chat/environment.png";
 import cislo from "../assets/chat/cislo.png";
+import ona from "../assets/chat/ona-portrait.png";
+import ivan from "../assets/chat/ivan-portrait.png";
 import documentBackground from "../assets/chat/document-background.png";
 import inputFrame from "../assets/chat/input-frame.png";
 import twoCats from "../assets/chat/two-cats.png";
@@ -27,6 +29,12 @@ const CHARACTER_NAMES = {
   cislo: "Cislobog Raskolnikova",
 };
 
+const CHARACTER_PORTRAITS = {
+  cislo: { src: cislo, width: 1500, height: 3249 },
+  ona: { src: ona, width: 1500, height: 2620 },
+  ivan: { src: ivan, width: 1500, height: 2799 },
+};
+
 export default function CharacterChat() {
   const { name } = useParams();
   const location = useLocation();
@@ -38,10 +46,13 @@ export default function CharacterChat() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+  const [panelOpen, setPanelOpen] = useState(false);
 
   const conversationRef = useRef(null);
   const sendControllerRef = useRef(null);
+  const portraitButtonRef = useRef(null);
   const displayName = CHARACTER_NAMES[name] || name || "Investigator";
+  const portrait = Object.hasOwn(CHARACTER_PORTRAITS, name) ? CHARACTER_PORTRAITS[name] : null;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -78,7 +89,12 @@ export default function CharacterChat() {
     if (conversation) {
       conversation.scrollTop = conversation.scrollHeight;
     }
-  }, [messages, sending]);
+  }, [messages, sending, panelOpen]);
+
+  function hideConversation() {
+    setPanelOpen(false);
+    portraitButtonRef.current?.focus({ preventScroll: true });
+  }
 
   function closeModal() {
     if (location.state?.overlay) {
@@ -94,6 +110,7 @@ export default function CharacterChat() {
     const content = draft.trim();
     if (!content || loading || sending) return;
 
+    setPanelOpen(true);
     const controller = new AbortController();
     sendControllerRef.current = controller;
     setSending(true);
@@ -139,24 +156,68 @@ export default function CharacterChat() {
     <main className="character-chat" aria-label={`Chat with ${displayName}`}>
       <div className="character-chat__canvas">
         <div className="character-chat__artwork" aria-hidden="true">
-          {[
-            environment,
-            ...(name === "cislo" ? [cislo] : []),
-            documentBackground,
-          ].map((src) => (
-            <img
-              className="character-chat__layer"
-              key={src}
-              src={src}
-              alt=""
-              width="1500"
-              height="3249"
-              draggable={false}
-            />
-          ))}
+          <img
+            className="character-chat__layer"
+            src={environment}
+            alt=""
+            width="1500"
+            height="3249"
+            draggable={false}
+          />
+          {portrait && (
+            <div className="character-chat__portrait-crop">
+              <img
+                className={`character-chat__portrait character-chat__portrait--${name}`}
+                src={portrait.src}
+                alt=""
+                width={portrait.width}
+                height={portrait.height}
+                draggable={false}
+              />
+            </div>
+          )}
+          <img
+            className="character-chat__layer"
+            src={documentBackground}
+            alt=""
+            width="1500"
+            height="3249"
+            draggable={false}
+          />
         </div>
 
-        <section className="character-chat__panel" aria-label="Conversation">
+        <button
+          ref={portraitButtonRef}
+          className={portrait ? `character-chat__portrait-button character-chat__portrait-button--${name}` : "character-chat__open-conversation"}
+          type="button"
+          aria-label={`Open conversation with ${displayName}`}
+          aria-controls="character-conversation"
+          aria-expanded={panelOpen}
+          onClick={() => setPanelOpen(true)}
+        >
+          {!portrait && "Open conversation"}
+        </button>
+
+        <section
+          id="character-conversation"
+          className="character-chat__panel"
+          aria-label="Conversation"
+          hidden={!panelOpen}
+          onKeyDown={(event) => {
+            if (event.key === "Escape") {
+              event.stopPropagation();
+              hideConversation();
+            }
+          }}
+        >
+          <button
+            className="character-chat__close"
+            type="button"
+            aria-label="Hide conversation"
+            onClick={hideConversation}
+          >
+            <span aria-hidden="true">×</span>
+          </button>
           <h1 className="character-chat__name">{displayName}</h1>
 
           <div
