@@ -1,6 +1,7 @@
 "use strict";
 
 const mongoose = require("mongoose");
+const { characters } = require("../characters/profiles");
 
 function createModels(connection) {
   const { Schema } = mongoose;
@@ -22,10 +23,28 @@ function createModels(connection) {
     expiresAt: { type: Date, required: true, expires: 0 },
   }, { timestamps: true, versionKey: false });
 
+  const characterProgressSchema = new Schema({
+    characterId: { type: String, required: true, enum: Object.keys(characters) },
+    unlockedAt: { type: Date, required: true },
+    relationshipTier: { type: String, enum: ["reserved", "more_open"], default: "reserved", required: true },
+  }, { _id: false });
+
+  const storyUnlockSchema = new Schema({
+    factId: { type: String, required: true, match: /^[a-zA-Z0-9_-]+$/, maxlength: 120 },
+    unlockedAt: { type: Date, required: true },
+  }, { _id: false });
+
+  const playerProfileSchema = new Schema({
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true, unique: true },
+    characterProgress: { type: [characterProgressSchema], default: [] },
+    storyUnlocks: { type: [storyUnlockSchema], default: [] },
+  }, { timestamps: true, versionKey: false });
+
   return {
     User: connection.model("User", userSchema, "users"),
     Session: connection.model("Session", sessionSchema, "sessions"),
     PasswordResetToken: connection.model("PasswordResetToken", resetSchema, "passwordResetTokens"),
+    PlayerProfile: connection.model("PlayerProfile", playerProfileSchema, "playerProfiles"),
   };
 }
 

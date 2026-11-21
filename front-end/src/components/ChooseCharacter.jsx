@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/AuthContext";
 import { useGameData } from "../hooks/useGameData";
 import GameDataStatus from "./GameDataStatus";
 import environment from "../assets/chat/environment.png";
@@ -7,9 +8,15 @@ import backIcon from "../assets/game/home-icon.png";
 import "./ChooseCharacter.css";
 
 export default function ChooseCharacter() {
+  const { user, loading } = useAuth();
+  return <CharacterSelection key={user?.id ?? "guest"} checkingSession={loading} user={user} />;
+}
+
+function CharacterSelection({ checkingSession, user }) {
   const navigate = useNavigate();
   const { data, loading, error, retry } = useGameData("characters");
-  const characters = loading || error ? [] : data?.characters ?? [];
+  const waiting = loading || (checkingSession && import.meta.env.MODE !== "demo");
+  const characters = waiting || error ? [] : data?.characters ?? [];
 
   return (
     <main className="choose-character" aria-label="Choose character">
@@ -36,9 +43,12 @@ export default function ChooseCharacter() {
           />
         </Link>
         <nav className="choose-character__list" aria-label="Characters">
-          {(loading || error || characters.length === 0) && (
+          {(waiting || error || characters.length === 0) && (
             <div className="choose-character__status">
-              <GameDataStatus loading={loading} error={error} onRetry={retry} emptyMessage="No characters available yet." />
+              <GameDataStatus loading={waiting} error={error} onRetry={retry} emptyMessage="No characters available yet." />
+              {!waiting && error && !user && import.meta.env.MODE !== "demo" && (
+                <Link to="/login" state={{ from: "/chat" }}>Log in</Link>
+              )}
             </div>
           )}
           {characters.map(({ name, displayName }) => (

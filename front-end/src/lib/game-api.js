@@ -47,6 +47,9 @@ async function requestGame(path, validate, { signal, method = "GET", body, actio
     if (slotRequest && response.status === 409) message = "This save slot is empty. Choose another slot.";
     if (slotRequest && response.status === 404) message = "This save slot could not be found. Please try another slot.";
     if (response.status === 400) message = "Some values are invalid. Please check them and try again.";
+    if (response.status === 401) message = "Please log in to view your game progress.";
+    if (response.status === 403) message = "This content has not been unlocked for your account.";
+    if (path === "characters" && response.status === 503) message = "Character progress is temporarily unavailable. Please try again later.";
     throw Object.assign(new Error(message), { status: response.status });
   }
   let data;

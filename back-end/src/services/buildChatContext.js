@@ -103,24 +103,22 @@ function buildChatContext({
     instructions.push(formatList("Examples of this character's voice", examples));
   }
 
-  if (mode === "story") {
-    const unlockedFacts = Array.isArray(trustedContext.unlockedFacts)
-      ? trustedContext.unlockedFacts
-          .filter(
-            (fact) =>
-              typeof fact === "string" &&
-              fact.trim() &&
-              fact.length <= 500
-          )
-          .slice(0, MAX_UNLOCKED_FACTS)
-      : [];
+  const unlockedFacts = Array.isArray(trustedContext.unlockedFacts)
+    ? trustedContext.unlockedFacts
+        .filter(
+          (fact) =>
+            typeof fact === "string" &&
+            fact.trim() &&
+            fact.length <= 500
+        )
+        .slice(0, MAX_UNLOCKED_FACTS)
+    : [];
 
-    instructions.push(
-      unlockedFacts.length
-        ? formatList("Story facts unlocked for this player", unlockedFacts)
-        : "No case-specific story facts are unlocked for this player."
-    );
-  }
+  instructions.push(
+    unlockedFacts.length
+      ? formatList("Story facts unlocked for this player", unlockedFacts)
+      : "No case-specific story facts are unlocked for this player."
+  );
 
   return {
     instructions: instructions.join("\n\n"),
