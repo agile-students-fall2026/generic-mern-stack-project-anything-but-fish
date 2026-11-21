@@ -21,7 +21,7 @@ function plotsFor(profile) {
   }));
 }
 
-export function createGameHandlers({ baseUrl = "/api", scenario = "demo", delayMs = 250, profile } = {}) {
+export function createGameHandlers({ baseUrl = "/api", scenario = "demo", delayMs = 250, profile, mockCharacters = false } = {}) {
   if (typeof baseUrl !== "string" || !baseUrl.trim()) {
     throw new Error("Game mock baseUrl must be a nonempty string.");
   }
@@ -49,12 +49,13 @@ export function createGameHandlers({ baseUrl = "/api", scenario = "demo", delayM
     return data instanceof Response ? data : HttpResponse.json(data, { headers });
   };
 
-  // Only unfinished game endpoints are mocked. Auth, chat, and collections use the server.
+  // Characters use account progress unless the standalone demo explicitly opts in.
+  // Auth, chat, and collections always use the server.
   return [
     http.get(`${apiBase}/game/plots`, respond(() => ({ categories: plotsFor(currentProfile) }))),
-    http.get(`${apiBase}/game/characters`, respond(() => ({
+    ...(mockCharacters ? [http.get(`${apiBase}/game/characters`, respond(() => ({
       characters: characterCatalog.filter((character) => currentProfile.unlockedCharacterIds.includes(character.name)),
-    }))),
+    })))] : []),
     http.get(`${apiBase}/game/inventory`, respond(() => ({
       capacity: inventoryPreview.capacity,
       items: scenario === "empty" ? [] : inventoryPreview.items,

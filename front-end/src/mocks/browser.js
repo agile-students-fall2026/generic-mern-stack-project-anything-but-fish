@@ -7,6 +7,7 @@ export async function startGameMocks() {
     baseUrl,
     scenario: import.meta.env.VITE_MOCK_SCENARIO || "demo",
     delayMs: Number(import.meta.env.VITE_MOCK_DELAY_MS ?? 250),
+    mockCharacters: import.meta.env.MODE === "demo",
   }));
 
   await worker.start({

@@ -4,6 +4,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
+    "profile:grant": "node scripts/grant-profile-unlocks.js",
     "test": "mocha --timeout 60000",
     "coverage": "c8 mocha --timeout 60000"
   },

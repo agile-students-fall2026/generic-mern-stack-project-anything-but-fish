@@ -7,10 +7,13 @@ const helmet = require("helmet");
 const { readConfig } = require("./config");
 const { createAuthRouter, readAccount, HttpError } = require("./routes/auth");
 const collectionsRouter = require("./routes/collections");
+const charactersRouter = require("./routes/characters");
 const chatRouter = require("./routes/chat");
+const { ensurePlayerProfile } = require("./services/playerProfiles");
 
-function createApp({ config = readConfig({}, { requireDatabase: false }), models, logger = console } = {}) {
+function createApp({ config = readConfig({}, { requireDatabase: false }), models, logger = console, generateChatReply } = {}) {
   const app = express();
+  app.locals.generateChatReply = generateChatReply;
   const frontendOrigins = config.frontendOrigins ?? [config.frontendOrigin];
   app.disable("x-powered-by");
   app.set("trust proxy", config.trustProxy);
@@ -30,8 +33,6 @@ function createApp({ config = readConfig({}, { requireDatabase: false }), models
     next();
   });
 
-  app.locals.chatCookieOptions = { secure: config.secureCookies, sameSite: config.sameSite };
-
   app.get("/api/health", (_req, res) => {
     if (!models) return res.json({ status: "ok", authentication: "unavailable" });
     const ready = models.User.db.readyState === 1;
@@ -47,11 +48,18 @@ function createApp({ config = readConfig({}, { requireDatabase: false }), models
   }
 
   app.use("/api/game/collections", collectionsRouter);
-  app.use("/api/game/chat", async (req, _res, next) => {
+  async function requirePlayerProfile(req, res, next) {
+    if (!models?.PlayerProfile || models.PlayerProfile.db.readyState !== 1) {
+      throw new HttpError(503, "Player progress is unavailable. Check the server's database configuration.");
+    }
     const user = await readAccount(req, { config, models });
-    if (user) req.user = { id: user.id, email: user.email };
+    if (!user) throw new HttpError(401, "Please log in to access your characters and chat.");
+    req.user = { id: user.id };
+    res.locals.playerProfile = await ensurePlayerProfile(models, user._id);
     next();
-  }, chatRouter);
+  }
+  app.use("/api/game/characters", requirePlayerProfile, charactersRouter);
+  app.use("/api/game/chat", requirePlayerProfile, chatRouter);
 
   app.use((_req, res) => res.status(404).json({ detail: "Not found" }));
   app.use((error, _req, res, _next) => {

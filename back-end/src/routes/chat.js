@@ -1,62 +1,33 @@
 "use strict";
 
-const { randomBytes } = require("node:crypto");
 const express = require("express");
 const {
   getCharacterProfile,
   getChatModeRule,
 } = require("../../characters");
 const { generateChatReply } = require("../services/openaiChat");
+const { getUnlockedChatContext } = require("../services/playerProfiles");
 
 const router = express.Router();
 const conversations = new Map();
 const pending = new Set();
 
-const GUEST_COOKIE = "abf_chat_guest";
-const GUEST_COOKIE_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 const MAX_CONVERSATIONS = 500;
 const MAX_MESSAGES = 12;
 const HISTORY_TTL_MS = 60 * 60 * 1000;
 
 router.use(express.json({ limit: "8kb" }));
 
-function readGuestId(req) {
-  const cookie = (req.headers.cookie || "")
-    .split(";")
-    .map((part) => part.trim())
-    .find((part) => part.startsWith(`${GUEST_COOKIE}=`));
-
-  const id = cookie?.slice(GUEST_COOKIE.length + 1);
-  return /^[a-f0-9]{64}$/.test(id || "") ? id : null;
-}
-
 function identifyPlayer(req, res, next) {
-  const accountId =
-    req.user?.id ?? res.locals.user?.id ?? req.session?.userId;
+  const accountId = req.user?.id;
 
-  if (accountId !== undefined && accountId !== null && accountId !== "") {
-    res.locals.chatPlayerId = `user:${accountId}`;
-    return next();
-  }
-
-  let guestId = readGuestId(req);
-
-  if (!guestId) {
-    guestId = randomBytes(32).toString("hex");
-
-    res.cookie(GUEST_COOKIE, guestId, {
-      httpOnly: true,
-      sameSite: req.app.locals.chatCookieOptions?.sameSite || "lax",
-      secure:
-        req.app.locals.chatCookieOptions?.secure ??
-        (process.env.NODE_ENV === "production" ||
-        process.env.AUTH_COOKIE_SECURE === "true"),
-      path: "/api/game/chat",
-      maxAge: GUEST_COOKIE_AGE_MS,
+  if (!accountId || !res.locals.playerProfile) {
+    return res.status(401).json({
+      detail: "Please log in to access your characters and chat.",
     });
   }
 
-  res.locals.chatPlayerId = `guest:${guestId}`;
+  res.locals.chatPlayerId = `user:${accountId}`;
   next();
 }
 
@@ -67,10 +38,22 @@ function validateSelection(req, res, next) {
     return res.status(404).json({ detail: "Character not found." });
   }
 
+  const context = getUnlockedChatContext(
+    res.locals.playerProfile,
+    req.params.characterId
+  );
+
+  if (!context) {
+    return res.status(403).json({
+      detail: "This character has not been unlocked for your account yet.",
+    });
+  }
+
   if (!getChatModeRule(mode)) {
     return res.status(400).json({ detail: "Choose a valid chat mode." });
   }
 
+  res.locals.chatContext = context;
   res.locals.chatMode = mode;
   next();
 }
@@ -137,7 +120,8 @@ router.post(
       const mode = res.locals.chatMode;
       const message = req.body?.message;
 
-      const reply = await generateChatReply({
+      const generateReply = req.app.locals.generateChatReply ?? generateChatReply;
+      const reply = await generateReply({
         characterId: req.params.characterId,
         mode,
         message,
