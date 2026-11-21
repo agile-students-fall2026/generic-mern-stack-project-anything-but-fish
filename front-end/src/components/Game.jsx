@@ -21,7 +21,6 @@ import "./Game.css";
 const backgroundLayers = [
   deskBackground,
   folderBackground,
-  clipboardClip,
   documentBackground,
 ];
 
@@ -34,10 +33,10 @@ const foregroundLayers = [
   radio,
 ];
 
-function ArtworkLayer({ src }) {
+function ArtworkLayer({ src, className = "" }) {
   return (
     <img
-      className="game__layer"
+      className={`game__layer ${className}`}
       src={src}
       alt=""
       width="1760"
@@ -78,13 +77,35 @@ export default function Game() {
             <image href={background.src} width={background.width} height={background.height} />
           </svg>
         </div>
-        {foregroundLayers.map((src) => <ArtworkLayer key={src} src={src} />)}
-        <p className="game__dialogue" aria-live="polite" aria-atomic="true">
-          <span className="game__dialogue-shadow" aria-hidden="true">{dialogue}</span>
-          <span className="game__dialogue-text">{dialogue}</span>
-        </p>
-        <ArtworkLayer src={fishingHook} />
-        <ArtworkLayer src={paperclip} />
+        <div className="game__top-art" aria-hidden="true">
+          <ArtworkLayer src={clipboardClip} />
+          <ArtworkLayer src={fishingHook} className="game__line-top" />
+          <ArtworkLayer src={paperclip} />
+        </div>
+        <div className="game__bottom-art">
+          {foregroundLayers.map((src) => <ArtworkLayer key={src} src={src} />)}
+          <p className="game__dialogue" aria-live="polite" aria-atomic="true">
+            <span className="game__dialogue-shadow" aria-hidden="true">{dialogue}</span>
+            <span className="game__dialogue-text">{dialogue}</span>
+          </p>
+          <ArtworkLayer src={fishingHook} className="game__line-bottom" />
+          <Link className="game__hook" to="save-load" state={{ overlay: true }} aria-label="Save and load" aria-haspopup="dialog" title="Save / Load" />
+          <span className="game__hook-highlight" aria-hidden="true" />
+          <button
+            className="game__page-button game__page-button--previous"
+            type="button"
+            aria-label="Previous dialogue"
+            disabled={pageNumber === 1}
+            onClick={() => navigate(`/game/${pageNumber - 1}`)}
+          />
+          <button
+            className="game__page-button game__page-button--next"
+            type="button"
+            aria-label="Next dialogue"
+            disabled={pageNumber === storyEntries.length}
+            onClick={() => navigate(`/game/${pageNumber + 1}`)}
+          />
+        </div>
         <nav className="game__tools" aria-label="Story options">
           <Link className="game__tool" to="/starting" aria-label="Back to home">
             <img src={homeIcon} alt="" width="152" height="152" draggable={false} />
@@ -96,22 +117,6 @@ export default function Game() {
             <img src={settingsIcon} alt="" width="152" height="152" draggable={false} />
           </Link>
         </nav>
-        <Link className="game__hook" to="save-load" state={{ overlay: true }} aria-label="Save and load" aria-haspopup="dialog" title="Save / Load" />
-        <span className="game__hook-highlight" aria-hidden="true" />
-        <button
-          className="game__page-button game__page-button--previous"
-          type="button"
-          aria-label="Previous dialogue"
-          disabled={pageNumber === 1}
-          onClick={() => navigate(`/game/${pageNumber - 1}`)}
-        />
-        <button
-          className="game__page-button game__page-button--next"
-          type="button"
-          aria-label="Next dialogue"
-          disabled={pageNumber === storyEntries.length}
-          onClick={() => navigate(`/game/${pageNumber + 1}`)}
-        />
       </div>
       <Outlet context={{ closeModal, page: pageNumber, chapterTitle }} />
     </main>

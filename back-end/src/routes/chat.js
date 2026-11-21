@@ -46,10 +46,11 @@ function identifyPlayer(req, res, next) {
 
     res.cookie(GUEST_COOKIE, guestId, {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: req.app.locals.chatCookieOptions?.sameSite || "lax",
       secure:
-        process.env.NODE_ENV === "production" ||
-        process.env.AUTH_COOKIE_SECURE === "true",
+        req.app.locals.chatCookieOptions?.secure ??
+        (process.env.NODE_ENV === "production" ||
+        process.env.AUTH_COOKIE_SECURE === "true"),
       path: "/api/game/chat",
       maxAge: GUEST_COOKIE_AGE_MS,
     });

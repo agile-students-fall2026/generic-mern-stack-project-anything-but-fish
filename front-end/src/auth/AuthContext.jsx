@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { authRequest, readUser } from "../lib/auth-api";
 
@@ -9,13 +9,15 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [attempt, setAttempt] = useState(0);
+  const sessionCheck = useRef(null);
 
   useEffect(() => {
     const controller = new AbortController();
+    sessionCheck.current = controller;
     setLoading(true);
     setError("");
     authRequest("/me", { signal: controller.signal })
-      .then((data) => setUser(readUser(data)))
+      .then((data) => { if (!controller.signal.aborted) setUser(readUser(data)); })
       .catch((error) => {
         if (controller.signal.aborted) return;
         setUser(null);
@@ -27,16 +29,26 @@ export function AuthProvider({ children }) {
 
   async function login(credentials) {
     const data = await authRequest("/login", { body: credentials });
-    setUser(readUser(data));
+    const account = readUser(data);
+    sessionCheck.current?.abort();
+    setUser(account);
+    setLoading(false);
+    setError("");
+  }
+
+  function clearSession() {
+    sessionCheck.current?.abort();
+    setUser(null);
+    setLoading(false);
     setError("");
   }
 
   async function logout() {
     await authRequest("/logout", { body: {} });
-    setUser(null);
+    clearSession();
   }
 
-  return <AuthContext.Provider value={{ user, loading, error, login, logout, retry: () => setAttempt((value) => value + 1) }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, loading, error, login, logout, clearSession, retry: () => setAttempt((value) => value + 1) }}>{children}</AuthContext.Provider>;
 }
 
 export const useAuth = () => useContext(AuthContext);

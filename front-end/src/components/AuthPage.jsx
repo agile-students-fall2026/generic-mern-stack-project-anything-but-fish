@@ -82,8 +82,10 @@ export default function AuthPage({
           </button>
         </>}
       </form>
-      {feedback && <p className="auth-page__feedback" id={feedbackId} role={error ? "alert" : "status"}>{feedback}</p>}
-      <nav className="auth-page__footer" aria-label="Account navigation">{footer}</nav>
+      <div className="auth-page__messages">
+        {feedback && <p className="auth-page__feedback" id={feedbackId} role={error ? "alert" : "status"}>{feedback}</p>}
+        <nav className="auth-page__footer" aria-label="Account navigation">{footer}</nav>
+      </div>
     </main>
   );
 }
