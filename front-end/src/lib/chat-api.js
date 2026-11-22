@@ -1,12 +1,5 @@
-// front-end/src/lib/chat-api.js
-
 const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || "/api")
   .replace(/\/+$/, "");
-
-export const CHAT_MODES = Object.freeze({
-  DAILY: "daily",
-  STORY: "story",
-});
 
 function getCharacterUrl(characterId) {
   if (
@@ -17,12 +10,6 @@ function getCharacterUrl(characterId) {
   }
 
   return `${apiBaseUrl}/game/chat/${encodeURIComponent(characterId)}`;
-}
-
-function validateMode(mode) {
-  if (mode !== CHAT_MODES.DAILY && mode !== CHAT_MODES.STORY) {
-    throw new Error("Choose a valid chat mode.");
-  }
 }
 
 async function requestChat(url, { method = "GET", body, signal } = {}) {
@@ -69,25 +56,8 @@ async function requestChat(url, { method = "GET", body, signal } = {}) {
   return data;
 }
 
-/**
- * GET /api/game/chat/:characterId?mode=daily|story
- *
- * Expected response:
- * {
- *   messages: [
- *     { role: "user" | "assistant", content: "..." }
- *   ]
- * }
- */
-export async function getChatHistory(
-  characterId,
-  mode,
-  { signal } = {}
-) {
-  validateMode(mode);
-
-  const url = `${getCharacterUrl(characterId)}?mode=${encodeURIComponent(mode)}`;
-  const data = await requestChat(url, { signal });
+export async function getChatHistory(characterId, { signal } = {}) {
+  const data = await requestChat(getCharacterUrl(characterId), { signal });
 
   if (
     !Array.isArray(data.messages) ||
@@ -105,23 +75,7 @@ export async function getChatHistory(
   return data.messages;
 }
 
-/**
- * POST /api/game/chat/:characterId
- *
- * Request body:
- * { mode: "daily" | "story", message: "..." }
- *
- * Expected response:
- * { reply: "..." }
- */
-export async function sendChatMessage(
-  characterId,
-  mode,
-  message,
-  { signal } = {}
-) {
-  validateMode(mode);
-
+export async function sendChatMessage(characterId, message, { signal } = {}) {
   const content = typeof message === "string" ? message.trim() : "";
 
   if (!content || content.length > 2000) {
@@ -130,7 +84,7 @@ export async function sendChatMessage(
 
   const data = await requestChat(getCharacterUrl(characterId), {
     method: "POST",
-    body: { mode, message: content },
+    body: { message: content },
     signal,
   });
 

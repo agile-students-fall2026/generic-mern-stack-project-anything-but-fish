@@ -6,11 +6,7 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
-import {
-  CHAT_MODES,
-  getChatHistory,
-  sendChatMessage,
-} from "../lib/chat-api";
+import { getChatHistory, sendChatMessage } from "../lib/chat-api";
 import { useAuth } from "../auth/AuthContext";
 import environment from "../assets/chat/environment.png";
 import cislo from "../assets/chat/cislo.png";
@@ -47,7 +43,6 @@ function CharacterConversation({ checkingSession }) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [mode, setMode] = useState(CHAT_MODES.DAILY);
   const [messages, setMessages] = useState([]);
   const [draft, setDraft] = useState("");
   const [loading, setLoading] = useState(true);
@@ -65,6 +60,8 @@ function CharacterConversation({ checkingSession }) {
   const accessDenied = [401, 403, 404].includes(errorStatus);
 
   useEffect(() => {
+    if (checkingSession) return undefined;
+
     const controller = new AbortController();
     let active = true;
 
@@ -74,7 +71,7 @@ function CharacterConversation({ checkingSession }) {
     setErrorStatus(null);
     setLoading(true);
 
-    getChatHistory(name, mode, { signal: controller.signal })
+    getChatHistory(name, { signal: controller.signal })
       .then((history) => {
         if (active) setMessages(history);
       })
@@ -93,7 +90,7 @@ function CharacterConversation({ checkingSession }) {
       controller.abort();
       sendControllerRef.current?.abort();
     };
-  }, [name, mode]);
+  }, [name, checkingSession]);
 
   useEffect(() => {
     const conversation = conversationRef.current;
@@ -130,7 +127,7 @@ function CharacterConversation({ checkingSession }) {
     setErrorStatus(null);
 
     try {
-      const reply = await sendChatMessage(name, mode, content, {
+      const reply = await sendChatMessage(name, content, {
         signal: controller.signal,
       });
 
@@ -233,31 +230,6 @@ function CharacterConversation({ checkingSession }) {
             <span aria-hidden="true">×</span>
           </button>
           <h1 className="character-chat__name">{displayName}</h1>
-
-          <div
-            className="character-chat__modes"
-            role="group"
-            aria-label="Conversation mode"
-          >
-            <button
-              className="character-chat__mode"
-              type="button"
-              aria-pressed={mode === CHAT_MODES.DAILY}
-              disabled={sending}
-              onClick={() => setMode(CHAT_MODES.DAILY)}
-            >
-              Daily
-            </button>
-            <button
-              className="character-chat__mode"
-              type="button"
-              aria-pressed={mode === CHAT_MODES.STORY}
-              disabled={sending}
-              onClick={() => setMode(CHAT_MODES.STORY)}
-            >
-              Story
-            </button>
-          </div>
 
           <div
             className="character-chat__conversation"

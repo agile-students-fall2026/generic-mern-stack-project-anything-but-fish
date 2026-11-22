@@ -39,7 +39,6 @@
   top: 0;
   left: 0;
   width: 100%;
-  /* Match Cislo's lower edge and keep full-length portraits behind the paper. */
   height: calc(2542 / 3249 * 100%);
   overflow: hidden;
 }
@@ -100,7 +99,6 @@
 .character-chat__composer {
   position: absolute;
   left: calc(56 / 1500 * 100%);
-  /* Keep the complete input reachable when a short viewport crops the artwork. */
   bottom: max(calc(77 / 3249 * 100%), calc((100% - 100svh) / 2 + max(12px, env(safe-area-inset-bottom))));
   width: calc(1397 / 1500 * 100%);
   aspect-ratio: 1397 / 801;
@@ -121,7 +119,6 @@
   width: calc(1205 / 1397 * 100%);
   height: calc(510 / 801 * 100%);
   box-sizing: border-box;
-  /* Keep text clear of the frame's four corners; the cat may overlap text. */
   padding: calc(50 / 1500 * 100cqw) calc(90 / 1500 * 100cqw);
   border: 0;
   border-radius: 0;
@@ -259,32 +256,6 @@
   white-space: nowrap;
 }
 
-.character-chat__modes {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-}
-
-.character-chat__mode {
-  padding: 5px 12px;
-  border: 1px solid #665747;
-  border-radius: 6px;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-}
-
-.character-chat__mode[aria-pressed="true"] {
-  background: #42382e;
-  color: #fff;
-}
-
-.character-chat__mode:disabled {
-  cursor: default;
-  opacity: 0.6;
-}
-
 .character-chat__conversation {
   min-height: 0;
   flex: 1;
@@ -355,7 +326,6 @@
   opacity: 0.6;
 }
 
-.character-chat__mode:focus-visible,
 .character-chat__send:focus-visible,
 .character-chat__close:focus-visible,
 .character-chat__open-conversation:focus-visible,

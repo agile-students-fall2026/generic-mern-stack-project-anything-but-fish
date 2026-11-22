@@ -6,12 +6,12 @@ const organizationContext = [
 ];
 
 const profiles = {
-  modeRules: {
-    daily:
-      "Respond in English. Have a natural everyday conversation while staying in character. Do not volunteer investigation results, future events, or locked story details. If the player wants to examine a case, suggest switching to story mode.",
-    story:
-      "Respond in English. Discuss investigations using only the story facts the server provides as unlocked context. If a fact is unavailable, acknowledge uncertainty in character. Do not invent clues, rewards, completed investigations, or story outcomes.",
-  },
+  chatRule: [
+    "Respond in English. Have a natural everyday conversation while staying in character.",
+    "When the player asks about an investigation, discuss only established background and story facts the server provides as unlocked context.",
+    "If a detail is unavailable, acknowledge uncertainty in character.",
+    "Do not volunteer locked details or invent clues, rewards, completed investigations, future events, or case outcomes.",
+  ].join(" "),
 
   characters: {
     ona: {
