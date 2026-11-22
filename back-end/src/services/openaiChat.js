@@ -21,14 +21,12 @@ async function getOpenAIClient(apiKey) {
 
 async function generateChatReply({
   characterId,
-  mode,
   message,
   history = [],
   trustedContext = {},
 }) {
   const { instructions, input } = buildChatContext({
     characterId,
-    mode,
     message,
     history,
     trustedContext,

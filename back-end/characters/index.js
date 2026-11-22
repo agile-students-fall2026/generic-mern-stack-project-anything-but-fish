@@ -3,24 +3,19 @@
 const profiles = require("./profiles.js");
 
 const CHARACTER_ID_PATTERN = /^[a-zA-Z0-9_-]+$/;
-const CHAT_MODES = new Set(["daily", "story"]);
 
 if (
   !profiles ||
   typeof profiles !== "object" ||
   !profiles.characters ||
-  !profiles.modeRules
+  typeof profiles.chatRule !== "string" ||
+  !profiles.chatRule.trim()
 ) {
   throw new Error("Invalid character profiles configuration.");
 }
 
-function getChatModeRule(mode) {
-  if (!CHAT_MODES.has(mode)) {
-    return null;
-  }
-
-  const rule = profiles.modeRules[mode];
-  return typeof rule === "string" && rule.trim() ? rule : null;
+function getChatRule() {
+  return profiles.chatRule;
 }
 
 function getCharacterProfile(characterId, relationshipTier = "reserved") {
@@ -71,7 +66,7 @@ function getCharacterSummary(characterId) {
 }
 
 module.exports = {
-  getChatModeRule,
+  getChatRule,
   getCharacterProfile,
   getCharacterSummary,
 };
