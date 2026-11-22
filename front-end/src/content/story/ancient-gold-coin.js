@@ -17,6 +17,7 @@ import betrayalImage from "../../assets/game/scenes/ancient-gold-coin/coin-17-be
 import bridgeFallImage from "../../assets/game/scenes/ancient-gold-coin/coin-18-bridge-fall.png";
 import fallingCoinImage from "../../assets/game/scenes/ancient-gold-coin/coin-19-falling-coin.png";
 
+export const chapterId = "ancient-gold-coin";
 export const chapterTitle = "An Ancient Gold Coin";
 
 function scene(src, width = 2480, height = 3508) {
@@ -46,37 +47,38 @@ const backgrounds = {
 
 // Camera rectangles use original-image pixels; the reader fits and clamps the viewport.
 // Repeated camera coordinates keep split dialogue pages on the same framing.
+// IDs stay fixed when entries move; array order determines the current page number.
 export default [
   // Image 01: pages 1–5.
   {
-    id: "pond-opening",
+    id: 1001,
     background: backgrounds.pond,
     speaker: null,
     dialogue: 'Ah, the "thrill" of being on the clock.',
   },
   {
-    id: "pond-ivan-nervous",
+    id: 1002,
     background: backgrounds.pond,
     speaker: "ivan",
     dialogue:
       "Ivan (new investigator): Oh no... My first real investigation. I'm so nervous.",
   },
   {
-    id: "pond-ona-reassures",
+    id: 1003,
     background: backgrounds.pond,
     speaker: "ona",
     dialogue:
       "Ona (senior investigator): It's okay, sweetie. Everyone gets nervous the first time.",
   },
   {
-    id: "pond-ona-safety",
+    id: 1004,
     background: backgrounds.pond,
     speaker: "ona",
     dialogue:
       "Ona: Our safety comes first. If anything feels wrong, we'll come straight back.",
   },
   {
-    id: "pond-ivan-relieved",
+    id: 1005,
     background: backgrounds.pond,
     speaker: "ivan",
     dialogue: "Ivan: Okay... I feel better knowing you're here!",
@@ -84,7 +86,7 @@ export default [
 
   // Image 02: page 6.
   {
-    id: "coin-memory",
+    id: 1006,
     background: backgrounds.coinMemory,
     speaker: null,
     dialogue: "",
@@ -92,14 +94,14 @@ export default [
 
   // Image 03: pages 7–8.
   {
-    id: "mining-establishing",
+    id: 1007,
     background: backgrounds.miningRoutine,
     camera: { x: 0, y: 0, width: 2480, height: 2600 },
     speaker: null,
     dialogue: "",
   },
   {
-    id: "mining-routine",
+    id: 1008,
     background: backgrounds.miningRoutine,
     camera: { x: 0, y: 908, width: 2480, height: 2600 },
     speaker: null,
@@ -109,7 +111,7 @@ export default [
 
   // Image 04: page 9.
   {
-    id: "ore-discovery",
+    id: 1009,
     background: backgrounds.oreDiscovery,
     speaker: "miner",
     dialogue: "Miner: What's this?",
@@ -117,7 +119,7 @@ export default [
 
   // Image 05: page 10.
   {
-    id: "market-arrival",
+    id: 1010,
     background: backgrounds.market,
     speaker: null,
     dialogue: "", // TODO: Market narration.
@@ -125,7 +127,7 @@ export default [
 
   // Image 06: page 11.
   {
-    id: "merchant-introduction",
+    id: 1011,
     background: backgrounds.merchant,
     speaker: null,
     dialogue:
@@ -134,14 +136,14 @@ export default [
 
   // Image 07: pages 12–13.
   {
-    id: "ore-appraisal",
+    id: 1012,
     background: backgrounds.oreAppraisal,
     speaker: null,
     dialogue:
       "An ore merchant examines the ore and finds that it is worth a fortune.",
   },
   {
-    id: "merchant-offer",
+    id: 1013,
     background: backgrounds.oreAppraisal,
     speaker: "merchant",
     dialogue:
@@ -150,7 +152,7 @@ export default [
 
   // Image 08: page 14.
   {
-    id: "ore-trade",
+    id: 1014,
     background: backgrounds.oreTrade,
     speaker: null,
     dialogue: "", // TODO: Trade narration.
@@ -158,21 +160,21 @@ export default [
 
   // Image 09: pages 15–17.
   {
-    id: "mining-day-and-night",
+    id: 1015,
     background: backgrounds.deepMining,
     speaker: null,
     dialogue:
       "The townspeople mine day and night, hoping to sell more ore for more money.",
   },
   {
-    id: "mining-deeper",
+    id: 1016,
     background: backgrounds.deepMining,
     camera: { x: 207, y: 180, width: 2066, height: 2923 },
     speaker: null,
     dialogue: "They follow the ore deeper into the mountain.",
   },
   {
-    id: "mining-water-seeps",
+    id: 1017,
     background: backgrounds.deepMining,
     camera: { x: 207, y: 180, width: 2066, height: 2923 },
     speaker: null,
@@ -181,7 +183,7 @@ export default [
 
   // Image 10: page 18.
   {
-    id: "ore-carts",
+    id: 1018,
     background: backgrounds.oreCarts,
     speaker: null,
     dialogue: "More digging, more money. Rest, sadly, doesn't pay.",
@@ -189,7 +191,7 @@ export default [
 
   // Image 11: pages 19–27.
   {
-    id: "flood-rock-breaks",
+    id: 1019,
     background: backgrounds.flood,
     camera: { x: 650, y: 0, width: 1500, height: 1100 },
     speaker: null,
@@ -197,7 +199,7 @@ export default [
       "A pickaxe breaks through the last layer of rock, opening a path to an underground river higher inside the mountain.",
   },
   {
-    id: "flood-tunnel-bursts",
+    id: 1020,
     background: backgrounds.flood,
     camera: { x: 650, y: 0, width: 1500, height: 1100 },
     speaker: null,
@@ -205,48 +207,48 @@ export default [
       "The crack widens. Water bursts into the tunnel. The miners drop their tools and run.",
   },
   {
-    id: "flood-miner-notices",
+    id: 1021,
     background: backgrounds.flood,
     camera: { x: -400, y: 0, width: 1500, height: 1100 },
     speaker: "miner-1",
     dialogue: "Miner 1: Wait. Why is so much water leaking through?",
   },
   {
-    id: "flood-miner-keeps-digging",
+    id: 1022,
     background: backgrounds.flood,
     camera: { x: -400, y: 0, width: 1500, height: 1100 },
     speaker: "miner-2",
     dialogue: "Miner 2: Just a little more. There's got to be more ore behind—",
   },
   {
-    id: "flood-miner-run",
+    id: 1023,
     background: backgrounds.flood,
     camera: { x: -400, y: 0, width: 1500, height: 1100 },
     speaker: "miner-1",
     dialogue: "Miner 1: Run!",
   },
   {
-    id: "flood-reaches-town",
+    id: 1024,
     background: backgrounds.flood,
     speaker: null,
     dialogue:
       "Water rushes through the tunnels, out of the hillside mine entrance, and down toward the town.",
   },
   {
-    id: "flood-basin-fills",
+    id: 1025,
     background: backgrounds.flood,
     speaker: null,
     dialogue:
       "The basin's narrow outlet cannot drain the water fast enough. The water rises until the whole town is flooded.",
   },
   {
-    id: "flood-people-flee",
+    id: 1026,
     background: backgrounds.flood,
     speaker: null,
     dialogue: "People flee. Some do not escape the flood.",
   },
   {
-    id: "flood-child",
+    id: 1027,
     background: backgrounds.flood,
     camera: { x: -400, y: 350, width: 1500, height: 1100 },
     speaker: "child",
@@ -255,35 +257,35 @@ export default [
 
   // Image 12: pages 28–35. Image 13 is a framing reference only.
   {
-    id: "ruined-town-arrival",
+    id: 1028,
     background: backgrounds.ruinedTown,
     camera: { x: -300, y: 200, width: 1400, height: 840 },
     speaker: null,
     dialogue: "By the present day, the floodwater is long gone.",
   },
   {
-    id: "ruined-town-wall-stains",
+    id: 1029,
     background: backgrounds.ruinedTown,
     camera: { x: -300, y: 200, width: 1400, height: 840 },
     speaker: null,
     dialogue: "High water marks stain the town walls.",
   },
   {
-    id: "ruined-town-streets",
+    id: 1030,
     background: backgrounds.ruinedTown,
     camera: { x: -300, y: 200, width: 1400, height: 840 },
     speaker: null,
     dialogue: "Mud and broken buildings fill the streets.",
   },
   {
-    id: "ruined-town-water-marks",
+    id: 1031,
     background: backgrounds.ruinedTown,
     camera: { x: -200, y: -120, width: 1400, height: 840 },
     speaker: "ivan",
     dialogue: "Ivan: The water got that high...? Did the people here get out?",
   },
   {
-    id: "ruined-town-exploration",
+    id: 1032,
     background: backgrounds.ruinedTown,
     camera: { x: -120, y: 420, width: 1400, height: 840 },
     speaker: null,
@@ -291,7 +293,7 @@ export default [
       "Ona and Ivan look around in shock. They move forward, exploring the town. Ona grips the coin tightly.",
   },
   {
-    id: "ruined-town-ona-leads",
+    id: 1033,
     background: backgrounds.ruinedTown,
     camera: { x: 410, y: 150, width: 1400, height: 840 },
     speaker: "ona",
@@ -299,14 +301,14 @@ export default [
       "Ona: We don't know yet. Feeling ready to take a look inside? I'll go first.",
   },
   {
-    id: "ruined-town-ivan-follows",
+    id: 1034,
     background: backgrounds.ruinedTown,
     camera: { x: 410, y: 150, width: 1400, height: 840 },
     speaker: "ivan",
     dialogue: "Ivan: Okay. I'm right behind you!",
   },
   {
-    id: "ruined-town-influence",
+    id: 1035,
     background: backgrounds.ruinedTown,
     camera: { x: 300, y: 430, width: 1400, height: 840 },
     speaker: null,
@@ -315,7 +317,7 @@ export default [
 
   // Image 14: page 36.
   {
-    id: "coin-pedestal-detail",
+    id: 1036,
     background: backgrounds.pedestalDetail,
     camera: { x: 20, y: 170, width: 700, height: 700 },
     speaker: null,
@@ -324,7 +326,7 @@ export default [
 
   // Image 15: page 37.
   {
-    id: "coin-pedestal",
+    id: 1037,
     background: backgrounds.pedestal,
     speaker: null,
     dialogue: "",
@@ -332,13 +334,13 @@ export default [
 
   // Image 16: pages 38–39.
   {
-    id: "possession-ona",
+    id: 1038,
     background: backgrounds.possession,
     speaker: "ona",
     dialogue: "Ona: They're mine!",
   },
   {
-    id: "possession-ivan",
+    id: 1039,
     background: backgrounds.possession,
     speaker: "ivan",
     dialogue: "Ivan: Ona...?",
@@ -346,13 +348,13 @@ export default [
 
   // Image 17: pages 40–41.
   {
-    id: "betrayal-attack",
+    id: 1040,
     background: backgrounds.betrayal,
     speaker: null,
     dialogue: "Ona picks up a broken sword from the ground and stabs Ivan.",
   },
   {
-    id: "betrayal-ivan-dies",
+    id: 1041,
     background: backgrounds.betrayal,
     speaker: null,
     dialogue: "Ivan falls to the ground, dead.",
@@ -360,13 +362,13 @@ export default [
 
   // Image 18: pages 42–43.
   {
-    id: "bridge-approach",
+    id: 1042,
     background: backgrounds.bridgeFall,
     speaker: null,
     dialogue: "Ona walks toward the pile of gold coins.",
   },
   {
-    id: "bridge-trip",
+    id: 1043,
     background: backgrounds.bridgeFall,
     speaker: null,
     dialogue: "Ona trips over ore scattered on the bridge",
@@ -374,28 +376,28 @@ export default [
 
   // Image 19: pages 44–47.
   {
-    id: "fall-top",
+    id: 1044,
     background: backgrounds.fallingCoin,
     camera: { x: 0, y: -120, width: 2480, height: 2400 },
     speaker: null,
     dialogue: "",
   },
   {
-    id: "fall-middle",
+    id: 1045,
     background: backgrounds.fallingCoin,
     camera: { x: 0, y: 520, width: 2480, height: 2400 },
     speaker: null,
     dialogue: "",
   },
   {
-    id: "fall-lower",
+    id: 1046,
     background: backgrounds.fallingCoin,
     camera: { x: 0, y: 1060, width: 2480, height: 2400 },
     speaker: null,
     dialogue: "",
   },
   {
-    id: "fall-coin",
+    id: 1047,
     background: backgrounds.fallingCoin,
     camera: { x: 200, y: 2050, width: 2080, height: 1800 },
     speaker: null,
