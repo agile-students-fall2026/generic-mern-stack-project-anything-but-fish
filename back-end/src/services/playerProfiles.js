@@ -12,6 +12,7 @@ async function ensurePlayerProfile(models, userId) {
         userId,
         characterProgress: [{ characterId: "cislo", unlockedAt: createdAt, relationshipTier: "reserved" }],
         storyUnlocks: [],
+        inventory: [],
         createdAt,
         updatedAt: createdAt,
       } },

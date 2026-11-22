@@ -8,6 +8,7 @@ const { readConfig } = require("./config");
 const { createAuthRouter, readAccount, HttpError } = require("./routes/auth");
 const collectionsRouter = require("./routes/collections");
 const charactersRouter = require("./routes/characters");
+const inventoryRouter = require("./routes/inventory");
 const chatRouter = require("./routes/chat");
 const { ensurePlayerProfile } = require("./services/playerProfiles");
 
@@ -53,12 +54,13 @@ function createApp({ config = readConfig({}, { requireDatabase: false }), models
       throw new HttpError(503, "Player progress is unavailable. Check the server's database configuration.");
     }
     const user = await readAccount(req, { config, models });
-    if (!user) throw new HttpError(401, "Please log in to access your characters and chat.");
+    if (!user) throw new HttpError(401, "Please log in to access your game progress.");
     req.user = { id: user.id };
     res.locals.playerProfile = await ensurePlayerProfile(models, user._id);
     next();
   }
   app.use("/api/game/characters", requirePlayerProfile, charactersRouter);
+  app.use("/api/game/inventory", requirePlayerProfile, inventoryRouter);
   app.use("/api/game/chat", requirePlayerProfile, chatRouter);
 
   app.use((_req, res) => res.status(404).json({ detail: "Not found" }));

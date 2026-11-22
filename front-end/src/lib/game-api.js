@@ -7,7 +7,10 @@ const nonemptyText = (value) => text(value) && value.trim().length > 0;
 const volume = (value) => Number.isInteger(value) && value >= 0 && value <= 100;
 const settingsValid = (value) => volume(value?.soundVolume) && volume(value.ambientVolume) && ["en", "zh"].includes(value.language);
 const positionValid = (value) => nonemptyText(value?.chapterTitle) && Number.isSafeInteger(value.page) && value.page > 0;
-const icons = new Set(["coin", "key", "notebook", "tape", "photograph"]);
+const icons = new Set([
+  "coin",
+  // "key", "notebook", "tape", "photograph",
+]);
 const validators = {
   plots: (data) => list(data?.categories, (category) => id(category?.id) && text(category.title)
     && list(category.entries, (entry) => id(entry?.id) && text(entry.title)
