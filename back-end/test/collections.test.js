@@ -1,43 +1,40 @@
+"use strict";
+
 const { expect } = require("chai");
+const express = require("express");
 const request = require("supertest");
-const app = require("../src/app");
+const { createApp } = require("../src/app");
+const collectionsRouter = require("../src/routes/collections");
 const { collectionItems } = require("../src/data/collections");
 
+function appWithProgress(chapterProgress = []) {
+  const app = express();
+  app.use((_req, res, next) => { res.locals.playerProfile = { chapterProgress }; next(); });
+  app.use("/api/game/collections", collectionsRouter);
+  return app;
+}
+
 describe("GET /api/game/collections", () => {
-  it("responds with status 200 and JSON", async () => {
-    const res = await request(app).get("/api/game/collections");
-
-    expect(res.status).to.equal(200);
-    expect(res.headers["content-type"]).to.match(/json/);
+  it("keeps collection descriptions locked before chapter completion", async () => {
+    const app = appWithProgress([{ chapterId: "ancient-gold-coin", lastEntryId: 1047, completedAt: null }]);
+    await request(app).get("/api/game/collections").expect(200, { items: [] });
   });
 
-  it("returns an items array with the collection data", async () => {
-    const res = await request(app).get("/api/game/collections");
-
-    expect(res.body).to.have.property("items");
-    expect(res.body.items).to.be.an("array");
-    expect(res.body.items).to.deep.equal(collectionItems);
+  it("returns only the completed chapter's photo with the existing response contract", async () => {
+    const app = appWithProgress([{ chapterId: "ancient-gold-coin", completedAt: new Date() }]);
+    const response = await request(app).get("/api/game/collections").expect(200);
+    expect(response.headers["content-type"]).to.match(/json/);
+    expect(response.body).to.deep.equal({ items: [collectionItems[0]] });
+    expect(response.body.items[0]).to.have.all.keys("id", "title", "description");
   });
 
-  it("gives every item an id, title, and description", async () => {
-    const res = await request(app).get("/api/game/collections");
-
-    for (const item of res.body.items) {
-      expect(item).to.have.all.keys("id", "title", "description");
-      expect(item.id).to.be.a("string");
-    }
-  });
-
-  it("returns 404 for an unknown route", async () => {
-    const res = await request(app).get("/api/game/not-a-real-page");
-
-    expect(res.status).to.equal(404);
+  it("requires an account and reports unavailable storage without exposing locked photos", async () => {
+    const models = { PlayerProfile: { db: { readyState: 1 } } };
+    await request(createApp({ models })).get("/api/game/collections").expect(401);
+    await request(createApp()).get("/api/game/collections").expect(503);
   });
 
   it("returns 404 with a JSON detail message for an unknown route", async () => {
-  const res = await request(app).get("/api/game/not-a-real-page");
-
-  expect(res.status).to.equal(404);
-  expect(res.body).to.have.property("detail", "Not found");
-});
+    await request(createApp()).get("/api/game/not-a-real-page").expect(404, { detail: "Not found" });
+  });
 });
