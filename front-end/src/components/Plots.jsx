@@ -6,10 +6,46 @@ import chapters from "../assets/plots/chapters.png";
 import objects from "../assets/plots/objects.png";
 import backIcon from "../assets/game/home-icon.png";
 import { useGameData } from "../hooks/useGameData";
+import { useAuth } from "../auth/AuthContext";
+import storyEntries, { chapterId } from "../content/story/ancient-gold-coin.js";
 import GameDataStatus from "./GameDataStatus";
 import "./Plots.css";
 
 export default function Plots() {
+  const { user, loading, error, retry } = useAuth();
+  const location = useLocation();
+  const preview = import.meta.env.MODE === "demo" && import.meta.env.VITE_ENABLE_MOCKS !== "false";
+  if (!preview && (loading || !user)) {
+    return (
+      <main className="plots" aria-label="Plots">
+        <PlotsCanvas />
+        <div className="plots__status">
+          <GameDataStatus loading={loading} error={error} onRetry={retry} emptyMessage="Please log in to view your archive." />
+          {!loading && !error && <Link to="/login" state={{ from: location.pathname + location.search }}>Log in</Link>}
+        </div>
+      </main>
+    );
+  }
+  return <PlotsContents key={preview ? "demo" : user.id} />;
+}
+
+function PlotsCanvas({ children }) {
+  return (
+    <div className="plots__canvas">
+      <div className="plots__artwork" aria-hidden="true">
+        {[background, characters, chapters, objects].map((image) => (
+          <img className="plots__layer" key={image} src={image} alt="" width="1500" height="3249" draggable={false} />
+        ))}
+      </div>
+      {children}
+      <Link className="plots__home" to="/starting" aria-label="Back to home">
+        <img src={backIcon} alt="" width="152" height="152" draggable={false} />
+      </Link>
+    </div>
+  );
+}
+
+function PlotsContents() {
   const { category: categoryId, entryId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -63,12 +99,7 @@ export default function Plots() {
 
   return (
     <main className="plots" aria-label="Plots">
-      <div className="plots__canvas">
-        <div className="plots__artwork" aria-hidden="true">
-          {[background, characters, chapters, objects].map((image) => (
-            <img className="plots__layer" key={image} src={image} alt="" width="1500" height="3249" draggable={false} />
-          ))}
-        </div>
+      <PlotsCanvas>
         {plotCategories.map((item) => (
           <button
             key={item.id}
@@ -80,10 +111,7 @@ export default function Plots() {
             onClick={() => navigate(`/plots/${item.id}`, { state: { fromPlots: true } })}
           />
         ))}
-        <Link className="plots__home" to="/starting" aria-label="Back to home">
-          <img src={backIcon} alt="" width="152" height="152" draggable={false} />
-        </Link>
-      </div>
+      </PlotsCanvas>
 
       {(loading || error || plotCategories.length === 0) && (
         <div className="plots__status">
@@ -137,7 +165,9 @@ export default function Plots() {
                   <div className="plots__detail-copy">
                     <p className="plots__detail-category">{category.title}</p>
                     <h1 id="plots-detail-title" ref={detailHeadingRef} tabIndex={-1}>{entry.title}</h1>
-                    {entry.description.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+                    {category.id === "chapters" && entry.id === chapterId
+                      ? storyEntries.filter((line) => line.dialogue.trim()).map((line) => <p key={line.id}>{line.dialogue}</p>)
+                      : entry.description.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
                   </div>
                 </section>
               )}
