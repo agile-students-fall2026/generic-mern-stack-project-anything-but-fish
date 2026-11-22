@@ -2,6 +2,7 @@
 
 const mongoose = require("mongoose");
 const { characters } = require("../characters/profiles");
+const { inventoryCapacity, itemCatalog } = require("./data/items");
 
 function createModels(connection) {
   const { Schema } = mongoose;
@@ -34,10 +35,25 @@ function createModels(connection) {
     unlockedAt: { type: Date, required: true },
   }, { _id: false });
 
+  const inventoryItemSchema = new Schema({
+    itemId: { type: String, required: true, enum: itemCatalog.map((item) => item.id) },
+    count: { type: Number, required: true, min: 1, validate: Number.isSafeInteger },
+    acquiredAt: { type: Date, required: true, default: Date.now },
+  }, { _id: false });
+
   const playerProfileSchema = new Schema({
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true, unique: true },
     characterProgress: { type: [characterProgressSchema], default: [] },
     storyUnlocks: { type: [storyUnlockSchema], default: [] },
+    inventory: {
+      type: [inventoryItemSchema],
+      default: [],
+      validate: {
+        validator: (items) => items.length <= inventoryCapacity
+          && new Set(items.map((item) => item.itemId)).size === items.length,
+        message: "Inventory must fit the backpack and contain one entry per item.",
+      },
+    },
   }, { timestamps: true, versionKey: false });
 
   return {

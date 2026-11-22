@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../auth/AuthContext";
 import { useGameData } from "../hooks/useGameData";
 import GamePopup from "./GamePopup";
 import GameDataStatus from "./GameDataStatus";
@@ -6,6 +8,30 @@ import ItemIcon from "./ItemIcon";
 import "./Inventory.css";
 
 export default function Inventory() {
+  const { user, loading, error, retry } = useAuth();
+  const location = useLocation();
+  const preview = import.meta.env.MODE === "demo" && import.meta.env.VITE_ENABLE_MOCKS !== "false";
+
+  if (!preview && (loading || !user)) {
+    return (
+      <GamePopup title="Inventory" className="inventory-popup">
+        <div className="inventory__workspace" aria-busy={loading}>
+          <div className="inventory__scroll">
+            <div className="inventory__status">
+              <GameDataStatus loading={loading} error={error} onRetry={retry} emptyMessage="Please log in to view your inventory." />
+              {!loading && !error && <Link to="/login" state={{ from: location.pathname + location.search }}>Log in</Link>}
+            </div>
+          </div>
+        </div>
+      </GamePopup>
+    );
+  }
+
+  // A different account starts a fresh request and clears the selected item.
+  return <InventoryContents key={preview ? "demo" : user.id} />;
+}
+
+function InventoryContents() {
   const { data, loading, error, retry } = useGameData("inventory");
   const [selectedId, setSelectedId] = useState(null);
   const itemButtons = useRef(new Map());
