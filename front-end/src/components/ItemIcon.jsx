@@ -1,9 +1,9 @@
-import coinAsset from "../assets/inventory/coin.svg";
+import coinAsset from "../assets/inventory/coin.png";
 
-export default function ItemIcon({ icon }) {
+export default function ItemIcon({ icon, className = "inventory__item-icon" }) {
   switch (icon) {
     case "coin":
-      return <img className="inventory__item-icon" src={coinAsset} alt="" aria-hidden="true" draggable={false} />;
+      return <img className={className} src={coinAsset} alt="" aria-hidden="true" draggable={false} />;
     /* Reserved for later inventory icons.
     case "key":
       artwork = <><path d="M25 32 48 55l8-8-5-5-5 2-4-4 2-5-11-11Z" fill="#b6a175" /><circle cx="21" cy="20" r="14" fill="#b6a175" /><circle cx="21" cy="20" r="6" fill="#493e2d" stroke="none" /></>;

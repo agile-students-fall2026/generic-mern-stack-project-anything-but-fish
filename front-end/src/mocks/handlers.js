@@ -1,7 +1,6 @@
 import { http, HttpResponse } from "msw/http";
 import { delay } from "msw/utils/delay";
-import { plotCatalog, characterCatalog } from "./fixtures/catalog.js";
-import { previewProfiles } from "./fixtures/profiles.js";
+import { chapterPreview, chapterCharacters, chapterCollection, initialChapterProgress } from "./fixtures/chapter.js";
 import { inventoryPreview } from "./fixtures/inventory.js";
 import { settingsPreview } from "./fixtures/settings.js";
 import { saveSlotsPreview } from "./fixtures/saves.js";
@@ -10,18 +9,7 @@ const volume = (value) => Number.isInteger(value) && value >= 0 && value <= 100;
 const exactFields = (data, fields) => data && typeof data === "object" && !Array.isArray(data)
   && Object.keys(data).length === fields.length && fields.every((field) => Object.hasOwn(data, field));
 
-function plotsFor(profile) {
-  return plotCatalog.map((category) => ({
-    ...category,
-    entries: category.entries.flatMap((entry) => {
-      const count = profile.plotProgress[category.id]?.[entry.id] ?? 0;
-      const collected = Number.isFinite(count) ? Math.min(entry.total, Math.max(0, Math.floor(count))) : 0;
-      return collected > 0 ? [{ ...entry, collected }] : [];
-    }),
-  }));
-}
-
-export function createGameHandlers({ baseUrl = "/api", scenario = "demo", delayMs = 250, profile, mockCharacters = false, mockInventory = false } = {}) {
+export function createGameHandlers({ baseUrl = "/api", scenario = "demo", delayMs = 250, mockProgress = false } = {}) {
   if (typeof baseUrl !== "string" || !baseUrl.trim()) {
     throw new Error("Game mock baseUrl must be a nonempty string.");
   }
@@ -32,7 +20,9 @@ export function createGameHandlers({ baseUrl = "/api", scenario = "demo", delayM
     throw new Error("Game mock delayMs must be an integer between 0 and 60000.");
   }
   const apiBase = baseUrl.replace(/\/+$/, "");
-  const currentProfile = profile ?? previewProfiles[scenario === "empty" ? "empty" : "demo"];
+  const progress = { ...initialChapterProgress };
+  const unlockedCharacters = new Set(scenario === "empty" ? [] : ["cislo"]);
+  const inventoryItems = [];
   let settings = { ...settingsPreview };
   const slots = structuredClone(saveSlotsPreview).map((slot) => scenario === "empty" ? { ...slot, save: null } : slot);
   const headers = { "Cache-Control": "no-store", "X-Mock-Data": "shared-preview" };
@@ -49,17 +39,68 @@ export function createGameHandlers({ baseUrl = "/api", scenario = "demo", delayM
     return data instanceof Response ? data : HttpResponse.json(data, { headers });
   };
 
-  // Characters and inventory use account progress unless the standalone demo opts in.
-  // Auth, chat, and collections always use the server.
+  const characterList = () => chapterCharacters.filter((character) => unlockedCharacters.has(character.name));
+  const plots = () => ({ categories: [
+    { id: "characters", title: "Characters", entries: characterList().map((character) => ({
+      id: character.name, title: character.displayName, total: 1, collected: 1, description: [character.description],
+    })) },
+    { id: "chapters", title: "Chapters", entries: progress.completedAt ? [{
+      id: chapterPreview.id, title: chapterPreview.title, total: 1, collected: 1, description: [chapterCollection.description],
+    }] : [] },
+    { id: "objects", title: "Objects", entries: inventoryItems.map((item) => ({
+      id: item.id, title: item.name, total: 1, collected: 1, description: [item.description],
+    })) },
+  ] });
+
+  // Only the standalone demo intercepts implemented account-progress APIs.
+  // Auth and NPC chat always retain their real network behavior.
   return [
-    http.get(`${apiBase}/game/plots`, respond(() => ({ categories: plotsFor(currentProfile) }))),
-    ...(mockCharacters ? [http.get(`${apiBase}/game/characters`, respond(() => ({
-      characters: characterCatalog.filter((character) => currentProfile.unlockedCharacterIds.includes(character.name)),
-    })))] : []),
-    ...(mockInventory ? [http.get(`${apiBase}/game/inventory`, respond(() => ({
-      capacity: inventoryPreview.capacity,
-      items: scenario === "empty" ? [] : inventoryPreview.items,
-    })))] : []),
+    ...(mockProgress ? [
+      http.get(`${apiBase}/game/plots`, respond(plots)),
+      http.get(`${apiBase}/game/characters`, respond(() => ({
+        characters: characterList().map(({ name, displayName }) => ({ name, displayName })),
+      }))),
+      http.get(`${apiBase}/game/collections`, respond(() => ({ items: progress.completedAt ? [chapterCollection] : [] }))),
+      http.get(`${apiBase}/game/inventory`, respond(() => ({ capacity: inventoryPreview.capacity, items: inventoryItems }))),
+      http.get(`${apiBase}/game/chapters/:chapterId/progress`, respond(({ params }) => (
+        params.chapterId === chapterPreview.id ? { ...progress } : fail("Chapter not found.", 404)
+      ))),
+      http.post(`${apiBase}/game/chapters/:chapterId/progress`, respond(async ({ params, request }) => {
+        if (params.chapterId !== chapterPreview.id) return fail("Chapter not found.", 404);
+        const data = await request.json().catch(() => null);
+        if (!exactFields(data, ["entryId"]) || !Number.isSafeInteger(data.entryId)) {
+          return fail("Provide a numeric entryId.", 400);
+        }
+        const index = chapterPreview.entryIds.indexOf(data.entryId);
+        if (index === -1) return fail("Story entry not found.", 400);
+        const furthestIndex = chapterPreview.entryIds.indexOf(progress.furthestEntryId);
+        if (index > furthestIndex + 1) return fail("Continue from your saved progress before skipping ahead.", 409);
+        progress.entryId = data.entryId;
+        if (index > furthestIndex) progress.furthestEntryId = data.entryId;
+        for (const unlock of chapterPreview.characterUnlocks) {
+          if (unlock.entryId === data.entryId) unlockedCharacters.add(unlock.characterId);
+        }
+        return { ...progress };
+      })),
+      http.post(`${apiBase}/game/chapters/:chapterId/complete`, respond(async ({ params, request }) => {
+        if (params.chapterId !== chapterPreview.id) return fail("Chapter not found.", 404);
+        const data = await request.json().catch(() => null);
+        if (!exactFields(data, [])) return fail("Send an empty JSON object to complete the chapter.", 400);
+        if (progress.furthestEntryId !== chapterPreview.entryIds.at(-1)) {
+          return fail("Read to the end of the chapter first.", 409);
+        }
+        const alreadyCompleted = Boolean(progress.completedAt);
+        if (!alreadyCompleted) {
+          progress.completedAt = new Date().toISOString();
+          inventoryItems.push(structuredClone(inventoryPreview.items[0]));
+          for (const unlock of chapterPreview.characterUnlocks) unlockedCharacters.add(unlock.characterId);
+        }
+        return {
+          progress: { ...progress }, alreadyCompleted,
+          awardedItems: alreadyCompleted ? [] : [{ itemId: "ancient-coin", count: 1 }],
+        };
+      })),
+    ] : []),
     http.get(`${apiBase}/game/settings`, respond(() => ({ settings }))),
     http.patch(`${apiBase}/game/settings`, respond(async ({ request }) => {
       const data = await request.json().catch(() => null);

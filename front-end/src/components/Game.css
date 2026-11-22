@@ -310,3 +310,31 @@
 .game__page-button:disabled::after {
   opacity: 0;
 }
+
+.game__progress {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  right: 12px;
+  max-width: calc(100% - 24px);
+  padding: 8px 12px;
+  border: 1px solid #a99b7a;
+  border-radius: 3px;
+  background: rgb(37 33 29 / 94%);
+  color: #ece7d9;
+  font: 14px / 1.4 "Chakra Petch", sans-serif;
+}
+
+.game__progress p { margin: 0; }
+.game__progress a { color: #a6eeee; }
+.game__progress button {
+  margin: 3px 8px 3px 0;
+  padding: 4px 8px;
+  border: 1px solid #a6eeee;
+  border-radius: 2px;
+  color: #a6eeee;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+.game__progress button:disabled { opacity: 0.5; cursor: default; }

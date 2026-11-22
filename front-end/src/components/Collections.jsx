@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../auth/AuthContext";
 import { useGameData } from "../hooks/useGameData";
 import GameDataStatus from "./GameDataStatus";
 import background from "../assets/collections/background.png";
@@ -17,6 +18,43 @@ const photoArtwork = {
 };
 
 export default function Collections() {
+  const { user, loading, error, retry } = useAuth();
+  const location = useLocation();
+  const preview = import.meta.env.MODE === "demo" && import.meta.env.VITE_ENABLE_MOCKS !== "false";
+  if (!preview && (loading || !user)) {
+    return (
+      <main className="collections" aria-label="Collections">
+        <CollectionsCanvas />
+        <div className="collections__status">
+          <GameDataStatus loading={loading} error={error} onRetry={retry} emptyMessage="Please log in to view your collections." />
+          {!loading && !error && <Link to="/login" state={{ from: location.pathname + location.search }}>Log in</Link>}
+        </div>
+      </main>
+    );
+  }
+  return <CollectionsContents key={preview ? "demo" : user.id} />;
+}
+
+function CollectionsCanvas({ items = [], onSelect }) {
+  return (
+    <div className="collections__canvas">
+      <div className="collections__artwork" aria-hidden="true">
+        {[background, ...items.map((item) => photoArtwork[item.id]), redThread].map((image) => (
+          <img key={image} className="collections__layer" src={image} alt="" width="1500" height="3249" draggable={false} />
+        ))}
+      </div>
+      {items.map((item) => (
+        <button key={item.id} className={`collections__photo collections__photo--${item.id}`} type="button"
+          aria-label={`View ${item.title}`} aria-haspopup="dialog" onClick={() => onSelect(item.id)} />
+      ))}
+      <Link className="collections__back" to="/starting" aria-label="Back to home">
+        <img src={backIcon} alt="" width="152" height="152" draggable={false} />
+      </Link>
+    </div>
+  );
+}
+
+function CollectionsContents() {
   const { data, loading, error, retry } = useGameData("collections");
   const collectionItems = loading || error ? [] : (data?.items ?? []).filter((item) => Object.hasOwn(photoArtwork, item.id));
   const [selectedId, setSelectedId] = useState(null);
@@ -36,34 +74,7 @@ export default function Collections() {
 
   return (
     <main className="collections" aria-label="Collections">
-      <div className="collections__canvas">
-        <div className="collections__artwork" aria-hidden="true">
-          {[background, ...collectionItems.map((item) => photoArtwork[item.id]), redThread].map((image) => (
-            <img
-              key={image}
-              className="collections__layer"
-              src={image}
-              alt=""
-              width="1500"
-              height="3249"
-              draggable={false}
-            />
-          ))}
-        </div>
-        {collectionItems.map((item) => (
-          <button
-            key={item.id}
-            className={`collections__photo collections__photo--${item.id}`}
-            type="button"
-            aria-label={`View ${item.title}`}
-            aria-haspopup="dialog"
-            onClick={() => setSelectedId(item.id)}
-          />
-        ))}
-        <Link className="collections__back" to="/starting" aria-label="Back to home">
-          <img src={backIcon} alt="" width="152" height="152" draggable={false} />
-        </Link>
-      </div>
+      <CollectionsCanvas items={collectionItems} onSelect={setSelectedId} />
 
       {(loading || error || collectionItems.length === 0) && (
         <div className="collections__status">

@@ -47,9 +47,9 @@ function App() {
           <Route path="/chat/:name" element={<CharacterChat />}>
             <Route path="inventory" element={<Inventory />} />
           </Route>
-          <Route path="/inventory" element={<Navigate to="/game/1/inventory" replace />} />
+          <Route path="/inventory" element={<Navigate to="/game" state={{ openInventory: true }} replace />} />
           <Route path="/collections" element={<Collections />} />
-          <Route path="/plots/chapters/text" element={<Navigate to="/plots/chapters/first-investigation" replace />} />
+          <Route path="/plots/chapters/text" element={<Navigate to="/plots/chapters/ancient-gold-coin" replace />} />
           <Route path="/plots/:category?/:entryId?" element={<Plots />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
