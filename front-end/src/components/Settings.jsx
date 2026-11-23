@@ -5,6 +5,11 @@ import { useGameData } from "../hooks/useGameData";
 import { updateSettings } from "../lib/game-api";
 import "./Settings.css";
 
+const labels = {
+  en: { title: "Settings", sound: "Sound effects", ambient: "Ambient sound", language: "Language", apply: "Apply settings", saving: "Applying…", saved: "Settings applied.", timeout: "This is taking too long. Please try again." },
+  zh: { title: "设置", sound: "音效音量", ambient: "环境音音量", language: "语言", apply: "应用设置", saving: "正在应用…", saved: "设置已应用。", timeout: "请求超时，请重试。" },
+};
+
 export default function Settings() {
   const { data, loading, error, retry } = useGameData("settings");
   const [draft, setDraft] = useState(null);
@@ -12,7 +17,7 @@ export default function Settings() {
   const [saveError, setSaveError] = useState("");
   const [saved, setSaved] = useState(false);
   const request = useRef(null);
-  const copy = data?.labels[draft?.language || data.settings.language];
+  const copy = labels[draft?.language || "en"];
 
   useEffect(() => { if (data) setDraft(data.settings); }, [data]);
   useEffect(() => () => { request.current?.abort(); request.current = null; }, []);
@@ -53,8 +58,8 @@ export default function Settings() {
   }
 
   return (
-    <GamePopup title={copy?.title || "Settings"} className="settings-popup">
-      {loading || error || !draft || !copy ? <GameDataStatus loading={loading} error={error} onRetry={retry} /> : (
+    <GamePopup title={copy.title} className="settings-popup">
+      {loading || error || !draft ? <GameDataStatus loading={loading} error={error} onRetry={retry} /> : (
         <form className="settings-form" onSubmit={apply}>
           <fieldset disabled={busy}>
             <div className="settings-form__control">
@@ -68,7 +73,8 @@ export default function Settings() {
             <div className="settings-form__control settings-form__language">
               <label htmlFor="game-language">{copy.language}</label>
               <select id="game-language" value={draft.language} onChange={(event) => change("language", event.target.value)}>
-                {data.languages.map(({ value, label }) => <option key={value} value={value}>{label}</option>)}
+                <option value="en">English</option>
+                <option value="zh">Chinese</option>
               </select>
             </div>
             <button className="settings-form__apply" type="submit">{busy ? copy.saving : copy.apply}</button>

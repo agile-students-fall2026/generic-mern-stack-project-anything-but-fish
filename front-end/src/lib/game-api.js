@@ -6,7 +6,6 @@ const list = (value, validate) => Array.isArray(value) && value.every(validate);
 const nonemptyText = (value) => text(value) && value.trim().length > 0;
 const volume = (value) => Number.isInteger(value) && value >= 0 && value <= 100;
 const settingsValid = (value) => volume(value?.soundVolume) && volume(value.ambientVolume) && ["en", "zh"].includes(value.language);
-const settingsLabelKeys = ["title", "sound", "ambient", "language", "apply", "saving", "saved", "timeout"];
 const positionValid = (value) => nonemptyText(value?.chapterTitle) && Number.isSafeInteger(value.page) && value.page > 0;
 const icons = new Set([
   "coin",
@@ -24,10 +23,7 @@ const validators = {
     && list(data.items, (item) => id(item?.id) && nonemptyText(item.name) && nonemptyText(item.type)
       && Number.isSafeInteger(item.count) && item.count > 0 && text(item.description) && icons.has(item.icon))
     && data.items.length <= data.capacity,
-  settings: (data) => settingsValid(data?.settings)
-    && ["en", "zh"].every((language) => settingsLabelKeys.every((key) => nonemptyText(data.labels?.[language]?.[key])))
-    && list(data.languages, (language) => ["en", "zh"].includes(language?.value) && nonemptyText(language.label))
-    && data.languages.length === 2 && new Set(data.languages.map(({ value }) => value)).size === 2,
+  settings: (data) => settingsValid(data?.settings),
   saves: (data) => list(data?.slots, (slot) => id(slot?.id) && (slot.save === null
     || (positionValid(slot.save) && text(slot.save.savedAt) && /^\d{4}-\d{2}-\d{2}T/.test(slot.save.savedAt)
       && Number.isFinite(Date.parse(slot.save.savedAt))))),
