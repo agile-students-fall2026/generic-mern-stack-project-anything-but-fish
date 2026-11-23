@@ -24,27 +24,57 @@ Anything but Fish began as a [course proposal](https://github.com/liangchuxin/ag
 
 ## Setup and Testing
 
-Requires Node.js 22.12 or newer and MongoDB Atlas. On a new checkout copy the
-`.env.example` files in `front-end` and `back-end` to `.env` (ignored by Git).
-In `back-end/.env`, configure the Atlas username/password and a random
-`JWT_SECRET` of at least 32 characters. See [backend setup](back-end/readme.txt)
-for secret generation and Atlas network access.
+Requires Node.js 22.12 or newer. MongoDB is required for accounts and saved game progress. An OpenAI API key is required for NPC replies.
 
-Run `npm install` and `npm run dev` in `back-end` to start the API on port 8000.
-In a second terminal run the same commands in `front-end`, then open
-`http://localhost:5173`. Vite forwards `/api` to the backend. Run `npm test` in
-`back-end` for Atlas integration tests in an isolated, automatically cleaned test
-database; run `npm run build` in `front-end` to verify its production build.
+From the repository root, create the environment files:
 
-Authentication stores accounts and salted password hashes in MongoDB, with JWTs
-in HttpOnly cookies and revocable sessions. The frontend uses native HTML forms
-and fetch; database credentials stay on the backend. Password recovery is currently
-unavailable; the application has no outgoing email integration or verification-code
-step. See [frontend setup](front-end/readme.txt)
-and [backend API contract](back-end/readme.txt). Game persistence is still planned.
-The current Render configuration hosts only the static frontend; production also
-needs a backend service and API routing.
+```bash
+cp back-end/.env.example back-end/.env
+cp front-end/.env.example front-end/.env
+node -e "console.log(require('node:crypto').randomBytes(48).toString('hex'))"
+```
 
+In `back-end/.env`, set `MONGODB_URI`, set `JWT_SECRET` to the generated value, and set `OPENAI_API_KEY`. Configure `MONGODB_URI` and `JWT_SECRET` together to enable login and saved progress. Keep database and API credentials out of `front-end/.env`. Do not commit either `.env` file.
+
+Start the API from the repository root:
+
+```bash
+cd back-end
+npm ci
+npm run dev
+```
+
+In a second terminal, start the frontend:
+
+```bash
+cd front-end
+npm install
+npm run dev
+```
+
+Open http://localhost:5173. Vite forwards `/api` requests to the backend on port 8000 by default.
+
+Run the backend tests and frontend build in separate terminals:
+
+```bash
+cd back-end
+npm test
+npm run coverage
+```
+
+```bash
+cd front-end
+npm run build
+```
+
+MongoDB integration tests require `TEST_MONGODB_URI` pointing to a disposable MongoDB instance. Without it, those tests are skipped. For example, if a dedicated test instance is running on port 27018:
+
+```bash
+cd back-end
+TEST_MONGODB_URI=mongodb://127.0.0.1:27018 npm run coverage
+```
+
+Registered players' accounts, chapter progress, character unlocks, and inventory are stored in MongoDB. Guests can chat with Cislo without signing in. Chat message history is currently held in server memory and is cleared when the server restarts.
 
 ## Sprint 1 Plans
 
