@@ -2,10 +2,8 @@ import { http, HttpResponse } from "msw/http";
 import { delay } from "msw/utils/delay";
 import { chapterPreview, chapterCharacters, chapterCollection, initialChapterProgress } from "./fixtures/chapter.js";
 import { inventoryPreview } from "./fixtures/inventory.js";
-import { settingsPreview } from "./fixtures/settings.js";
 import { saveSlotsPreview } from "./fixtures/saves.js";
 
-const volume = (value) => Number.isInteger(value) && value >= 0 && value <= 100;
 const exactFields = (data, fields) => data && typeof data === "object" && !Array.isArray(data)
   && Object.keys(data).length === fields.length && fields.every((field) => Object.hasOwn(data, field));
 
@@ -23,7 +21,6 @@ export function createGameHandlers({ baseUrl = "/api", scenario = "demo", delayM
   const progress = { ...initialChapterProgress };
   const unlockedCharacters = new Set(scenario === "empty" ? [] : ["cislo"]);
   const inventoryItems = [];
-  let settings = { ...settingsPreview };
   const slots = structuredClone(saveSlotsPreview).map((slot) => scenario === "empty" ? { ...slot, save: null } : slot);
   const headers = { "Cache-Control": "no-store", "X-Mock-Data": "shared-preview" };
   const fail = (detail, status) => HttpResponse.json({ detail }, { status, headers });
@@ -101,16 +98,6 @@ export function createGameHandlers({ baseUrl = "/api", scenario = "demo", delayM
         };
       })),
     ] : []),
-    http.get(`${apiBase}/game/settings`, respond(() => ({ settings }))),
-    http.patch(`${apiBase}/game/settings`, respond(async ({ request }) => {
-      const data = await request.json().catch(() => null);
-      if (!exactFields(data, ["soundVolume", "ambientVolume", "language"])
-        || !volume(data.soundVolume) || !volume(data.ambientVolume) || !["en", "zh"].includes(data.language)) {
-        return fail("Provide soundVolume and ambientVolume as integers from 0 to 100, and language as en or zh.", 400);
-      }
-      settings = { soundVolume: data.soundVolume, ambientVolume: data.ambientVolume, language: data.language };
-      return { settings };
-    })),
     http.get(`${apiBase}/game/saves`, respond(() => ({ slots }))),
     http.put(`${apiBase}/game/saves/:id`, respond(async ({ request, params }) => {
       const slot = slots.find((entry) => entry.id === params.id);
